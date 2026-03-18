@@ -49,11 +49,13 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .dot-g{background:var(--green);box-shadow:0 0 6px var(--green);}
 
+/* ── CORREÇÃO AMARELO: alturas do slide reduzidas ── */
 .carousel-wrap{position:relative;overflow:hidden;border-radius:20px;}
 .carousel-track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
 .slide{min-width:100%;height:180px;position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(245,166,35,.18);}
 @media(min-width:600px){.slide{height:220px;}}
 @media(min-width:900px){.slide{height:260px;}}
+
 .slide-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a3070 0%,#0d1b3e 60%,#1a1a00 100%);}
 .slide-img-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;}
 .slide-content{position:relative;z-index:2;padding:22px 20px;display:flex;align-items:flex-end;justify-content:space-between;height:100%;}
@@ -65,11 +67,13 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 @media(min-width:600px){.slide-title{font-size:36px;}}
 .slide-title span{color:var(--gold);}
 .slide-sub{color:var(--gray2);font-size:11px;margin-top:4px;font-weight:600;}
+
+/* ── CORREÇÃO VERMELHO: emoji sempre fixo, sem imagem ── */
 .slide-product-img{width:120px;flex-shrink:0;filter:drop-shadow(0 -6px 18px rgba(245,166,35,.35));}
 @media(min-width:600px){.slide-product-img{width:160px;}}
-.slide-product-img img{width:100%;display:block;transform:rotate(-5deg);animation:float 3s ease-in-out infinite;}
 .slide-emoji{font-size:80px;display:block;text-align:center;animation:float 3s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(-5deg) translateY(-7px)}}
+
 .carousel-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3;}
 .cdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;}
 .cdot.active{background:var(--gold);width:20px;border-radius:4px;}
@@ -84,28 +88,24 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .cat-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:30px;border:1.5px solid rgba(245,166,35,.2);background:transparent;color:var(--gray);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;}
 .cat-btn.active,.cat-btn:hover{background:var(--gold);border-color:var(--gold);color:var(--navy);}
 
-/* CORREÇÃO: sec-hdr fica em z-index 0, abaixo dos cards */
 .sec-hdr{padding:4px 16px 5px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:0;}
 .sec-hdr h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#fff;}
 .sec-hdr h3 span{color:var(--gold);}
 
-/* CORREÇÃO: feat-section com isolation para criar contexto próprio */
 #feat-section{position:relative;z-index:0;isolation:isolate;}
 
-/* CORREÇÃO: overflow-x:scroll + overflow-y:visible resolve a sobreposição */
-.feat-scroll{display:flex;gap:12px;padding: 4px 16px 20px;overflow-x:scroll;overflow-y:visible;scrollbar-width:none;cursor:grab;user-select:none;}
+.feat-scroll{display:flex;gap:12px;padding:4px 16px 20px;overflow-x:scroll;overflow-y:visible;scrollbar-width:none;cursor:grab;user-select:none;}
 .feat-scroll::-webkit-scrollbar{display:none;}
 .feat-scroll.grabbing{cursor:grabbing;}
 
-/* CORREÇÃO: z-index:1 garante cards acima do header de seção */
-.feat-card{flex-shrink:0;width:170px;background:var(--navy3);border-radius:18px;overflow:hidden;border:1px solid rgba(245,166,35,.15);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;z-index:1;}
+.feat-card{flex-shrink:0;width:170px;background:var(--navy3);border-radius:18px;overflow:visible;border:1px solid rgba(245,166,35,.15);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;z-index:1;}
 @media(min-width:600px){.feat-card{width:200px;}}
 .feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(245,166,35,.2);}
-.feat-badge{position:absolute;top:9px;left:9px;font-size:9px;font-weight:900;padding:3px 8px;border-radius:20px;letter-spacing:.5px;z-index:2;}
+.feat-badge{position:absolute;top:-8px;left:9px;font-size:9px;font-weight:900;padding:3px 8px;border-radius:20px;letter-spacing:.5px;z-index:2;}
 .feat-badge.hit{background:var(--red);color:#fff;}
 .feat-badge.novo{background:var(--green);color:#fff;}
 .feat-badge.esp{background:var(--gold);color:var(--navy);}
-.feat-img{width:100%;height:120px;background:var(--navy4);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.feat-img{width:100%;height:120px;background:var(--navy4);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:18px 18px 0 0;}
 .feat-img img{width:100%;height:100%;object-fit:cover;}
 .feat-info{padding:11px;}
 .feat-info h4{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;color:#fff;margin-bottom:2px;}
@@ -489,7 +489,20 @@ function initPhysicsScroll(el){
 let carouselIdx=0,carouselTimer;
 function renderCarousel(){
   const track=document.getElementById('carousel-track'),dots=document.getElementById('carousel-dots');
-  track.innerHTML=BANNERS.map(b=>`<div class="slide"><div class="slide-bg"></div>${b.img?`<img class="slide-img-cover" src="${b.img}" alt="">`:''}<div class="slide-content"><div class="slide-text"><div class="slide-badge ${b.badge_type==='green'?'green':b.badge_type==='red'?'red':''}">${b.badge||''}</div><div class="slide-title">${b.title_highlight?`<span>${b.title_highlight}</span>${b.title.replace(b.title_highlight,'')}`:b.title}</div><div class="slide-sub">${b.sub||''}</div></div>${b.img?`<div class="slide-product-img"><img src="${b.img}" alt="${b.title}" onerror="this.style.display='none'"></div>`:`<div class="slide-product-img"><span class="slide-emoji">🍔</span></div>`}</div></div>`).join('');
+  // CORREÇÃO VERMELHO: sempre usa emoji 🍔, nunca renderiza a imagem no slide-product-img
+  track.innerHTML=BANNERS.map(b=>`
+    <div class="slide">
+      <div class="slide-bg"></div>
+      ${b.img?`<img class="slide-img-cover" src="${b.img}" alt="">`:''}
+      <div class="slide-content">
+        <div class="slide-text">
+          <div class="slide-badge ${b.badge_type==='green'?'green':b.badge_type==='red'?'red':''}">${b.badge||''}</div>
+          <div class="slide-title">${b.title_highlight?`<span>${b.title_highlight}</span>${b.title.replace(b.title_highlight,'')}`:b.title}</div>
+          <div class="slide-sub">${b.sub||''}</div>
+        </div>
+        <div class="slide-product-img"><span class="slide-emoji">🍔</span></div>
+      </div>
+    </div>`).join('');
   dots.innerHTML=BANNERS.map((_,i)=>`<div class="cdot ${i===0?'active':''}" onclick="goSlide(${i})"></div>`).join('');
   carouselIdx=0;startCarousel();
 }
