@@ -16,12 +16,10 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--navy);color:var(--white);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
-
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:var(--navy2);}
 ::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:4px;}
 
-/* ===== LOADING SCREEN ===== */
 #loading-screen{position:fixed;inset:0;background:var(--navy);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .4s;}
 #loading-screen.fade{opacity:0;pointer-events:none;}
 .loading-logo{font-family:'Bebas Neue',sans-serif;font-size:64px;color:var(--gold);animation:pulse 1.2s ease-in-out infinite;}
@@ -31,7 +29,6 @@ body{background:var(--navy);color:var(--white);font-family:'Nunito',sans-serif;m
 @keyframes loadbar{0%{width:0%;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0%;margin-left:100%}}
 .loading-txt{font-size:12px;color:var(--gray);font-weight:700;letter-spacing:1px;}
 
-/* ===== HEADER ===== */
 header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(245,166,35,.15);box-shadow:0 4px 30px rgba(0,0,0,.4);}
 .header-inner{display:flex;align-items:center;gap:12px;padding:12px 16px;max-width:900px;margin:0 auto;}
 .logo-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;}
@@ -46,14 +43,12 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .admin-btn{flex-shrink:0;background:transparent;border:1.5px solid rgba(245,166,35,.3);border-radius:10px;color:var(--gray2);font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;padding:7px 12px;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .admin-btn:hover{border-color:var(--gold);color:var(--gold);}
 
-/* ===== INFO BAR ===== */
 .info-bar{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;max-width:900px;margin:0 auto;}
 .info-bar::-webkit-scrollbar{display:none;}
 .info-chip{display:flex;align-items:center;gap:6px;background:var(--navy3);border:1px solid rgba(245,166,35,.12);border-radius:30px;padding:6px 13px;white-space:nowrap;font-size:11.5px;font-weight:700;color:var(--gray2);flex-shrink:0;}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .dot-g{background:var(--green);box-shadow:0 0 6px var(--green);}
 
-/* ===== BANNER CAROUSEL ===== */
 .carousel-wrap{position:relative;overflow:hidden;border-radius:20px;}
 .carousel-track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
 .slide{min-width:100%;height:180px;position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(245,166,35,.18);}
@@ -83,23 +78,27 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .carousel-arrow.left{left:10px;}
 .carousel-arrow.right{right:10px;}
 
-/* ===== CATEGORIES ===== */
 .page-wrap{max-width:900px;margin:0 auto;}
 .categories{display:flex;gap:8px;padding:6px 16px 12px;overflow-x:auto;scrollbar-width:none;}
 .categories::-webkit-scrollbar{display:none;}
 .cat-btn{display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:30px;border:1.5px solid rgba(245,166,35,.2);background:transparent;color:var(--gray);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;}
 .cat-btn.active,.cat-btn:hover{background:var(--gold);border-color:var(--gold);color:var(--navy);}
 
-/* ===== SECTION HEADERS ===== */
-.sec-hdr{padding:4px 16px 12px;display:flex;align-items:center;justify-content:space-between;}
+/* CORREÇÃO: sec-hdr fica em z-index 0, abaixo dos cards */
+.sec-hdr{padding:4px 16px 5px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:0;}
 .sec-hdr h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#fff;}
 .sec-hdr h3 span{color:var(--gold);}
 
-/* ===== FEATURED SCROLL (physics) ===== */
-.feat-scroll{display:flex;gap:12px;padding:0 16px 20px;overflow-x:hidden;scrollbar-width:none;cursor:grab;user-select:none;}
-.feat-scroll.grabbing{cursor:grabbing;}
+/* CORREÇÃO: feat-section com isolation para criar contexto próprio */
+#feat-section{position:relative;z-index:0;isolation:isolate;}
+
+/* CORREÇÃO: overflow-x:scroll + overflow-y:visible resolve a sobreposição */
+.feat-scroll{display:flex;gap:12px;padding: 4px 16px 20px;overflow-x:scroll;overflow-y:visible;scrollbar-width:none;cursor:grab;user-select:none;}
 .feat-scroll::-webkit-scrollbar{display:none;}
-.feat-card{flex-shrink:0;width:170px;background:var(--navy3);border-radius:18px;overflow:hidden;border:1px solid rgba(245,166,35,.15);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;}
+.feat-scroll.grabbing{cursor:grabbing;}
+
+/* CORREÇÃO: z-index:1 garante cards acima do header de seção */
+.feat-card{flex-shrink:0;width:170px;background:var(--navy3);border-radius:18px;overflow:hidden;border:1px solid rgba(245,166,35,.15);cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;z-index:1;}
 @media(min-width:600px){.feat-card{width:200px;}}
 .feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(245,166,35,.2);}
 .feat-badge{position:absolute;top:9px;left:9px;font-size:9px;font-weight:900;padding:3px 8px;border-radius:20px;letter-spacing:.5px;z-index:2;}
@@ -116,7 +115,6 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .add-btn{width:28px;height:28px;border-radius:50%;background:var(--gold);border:none;color:var(--navy);font-size:18px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;flex-shrink:0;}
 .add-btn:hover{background:var(--gold2);transform:scale(1.1);}
 
-/* ===== MENU LIST ===== */
 .menu-list{padding:0 16px;}
 .menu-item{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:opacity .2s;}
 .menu-item:last-child{border-bottom:none;}
@@ -137,13 +135,11 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .mi-add{width:30px;height:30px;border-radius:50%;background:var(--gold);border:none;color:var(--navy);font-size:18px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
 .mi-add:hover{background:var(--gold2);transform:scale(1.08);box-shadow:0 4px 15px rgba(245,166,35,.4);}
 
-/* ===== WHATSAPP ===== */
 .wa-section{padding:16px;}
 .wa-btn{width:100%;background:linear-gradient(135deg,#25d366,#128c4e);border:none;border-radius:16px;padding:18px 24px;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;color:#fff;box-shadow:0 8px 25px rgba(37,211,102,.35);transition:all .2s;text-decoration:none;}
 .wa-btn:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(37,211,102,.5);}
 .wa-icon{width:28px;height:28px;flex-shrink:0;}
 
-/* ===== LOCATION ===== */
 .location-section{padding:0 16px 24px;}
 .location-card{background:var(--navy3);border:1px solid rgba(245,166,35,.15);border-radius:18px;overflow:hidden;}
 .location-header{padding:16px;display:flex;align-items:center;gap:10px;}
@@ -155,14 +151,11 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .location-details{padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px;}
 .loc-chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--gray2);}
 
-/* ===== DIVIDER ===== */
 .divider{height:6px;background:rgba(0,0,0,.3);margin:4px 0;}
 
-/* ===== FOOTER ===== */
 footer{padding:20px 16px 30px;text-align:center;color:var(--gray);font-size:12px;}
 footer .pi-sym{font-family:'Bebas Neue',sans-serif;font-size:34px;color:rgba(245,166,35,.25);display:block;margin-bottom:4px;}
 
-/* ===== MODAL ===== */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:300;backdrop-filter:blur(5px);align-items:flex-end;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--navy2);border-radius:24px 24px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:24px;animation:slideUp .3s ease;max-width:600px;margin:0 auto;}
@@ -185,10 +178,8 @@ footer .pi-sym{font-family:'Bebas Neue',sans-serif;font-size:34px;color:rgba(245
 .modal-wa-btn{margin:14px 20px 0;width:calc(100% - 40px);background:linear-gradient(135deg,#25d366,#128c4e);border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;color:#fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
 .modal-wa-btn:hover{opacity:.9;transform:translateY(-1px);}
 
-/* ===== TOAST ===== */
 #toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);padding:10px 20px;border-radius:30px;font-weight:800;font-size:13px;z-index:500;box-shadow:0 4px 20px rgba(245,166,35,.5);white-space:nowrap;max-width:90vw;}
 
-/* ===== ADMIN OVERLAY ===== */
 .adm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:400;backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:16px;}
 .adm-overlay.open{display:flex;}
 .adm-panel{background:var(--navy2);border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:24px;border:1px solid rgba(245,166,35,.2);}
@@ -248,29 +239,23 @@ textarea.f-input{resize:vertical;min-height:70px;}
 .banner-adm-info{flex:1;min-width:0;}
 .banner-adm-title{font-weight:800;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .banner-adm-sub{font-size:11px;color:var(--gray);}
-/* DB status badge */
 .db-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(76,175,125,.15);color:var(--green);border:1px solid rgba(76,175,125,.25);margin-left:8px;vertical-align:middle;}
 .db-badge.err{background:rgba(255,82,82,.15);color:var(--red);border-color:rgba(255,82,82,.25);}
 </style>
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
 <div id="loading-screen">
   <div class="loading-logo">π</div>
   <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
   <div class="loading-txt">Carregando cardápio…</div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="header-inner">
     <div class="logo-wrap">
       <div class="logo-icon">π</div>
-      <div class="logo-text">
-        <h1>π BURGUER</h1>
-        <span>Sabor Infinito</span>
-      </div>
+      <div class="logo-text"><h1>π BURGUER</h1><span>Sabor Infinito</span></div>
     </div>
     <div class="header-search">
       <span class="search-ic">🔍</span>
@@ -280,7 +265,6 @@ textarea.f-input{resize:vertical;min-height:70px;}
   </div>
 </header>
 
-<!-- INFO BAR -->
 <div style="max-width:900px;margin:0 auto;">
   <div class="info-bar">
     <div class="info-chip"><span class="dot dot-g"></span> Aberto agora</div>
@@ -290,7 +274,6 @@ textarea.f-input{resize:vertical;min-height:70px;}
   </div>
 </div>
 
-<!-- BANNER CAROUSEL -->
 <div style="max-width:900px;margin:0 auto;padding:0 16px 10px;">
   <div class="carousel-wrap">
     <div class="carousel-track" id="carousel-track"></div>
@@ -300,7 +283,6 @@ textarea.f-input{resize:vertical;min-height:70px;}
   </div>
 </div>
 
-<!-- CATEGORIES -->
 <div class="page-wrap">
   <div class="categories">
     <button class="cat-btn active" onclick="filterCat('all',this)">🍔 Todos</button>
@@ -310,20 +292,16 @@ textarea.f-input{resize:vertical;min-height:70px;}
     <button class="cat-btn" onclick="filterCat('sobremesa',this)">🍦 Sobremesas</button>
   </div>
 
-  <!-- DESTAQUE -->
   <div id="feat-section">
     <div class="sec-hdr"><h3>⚡ Em <span>Destaque</span></h3></div>
     <div class="feat-scroll" id="feat-scroll"></div>
   </div>
 
   <div class="divider"></div>
-
   <div class="sec-hdr"><h3>🍔 Nosso <span>Cardápio</span></h3></div>
   <div class="menu-list" id="menu-list"></div>
-
   <div class="divider"></div>
 
-  <!-- WHATSAPP -->
   <div class="wa-section">
     <a class="wa-btn" id="wa-main-btn" href="#" target="_blank">
       <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -333,15 +311,11 @@ textarea.f-input{resize:vertical;min-height:70px;}
 
   <div class="divider"></div>
 
-  <!-- LOCATION -->
   <div class="location-section">
     <div class="location-card">
       <div class="location-header">
         <span class="pin">📍</span>
-        <div>
-          <h4>Nossa Localização</h4>
-          <p id="loc-address">Goiânia, Goiás — Brasil</p>
-        </div>
+        <div><h4>Nossa Localização</h4><p id="loc-address">Goiânia, Goiás — Brasil</p></div>
       </div>
       <iframe class="map-iframe" id="map-iframe"
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d245890.34!2d-49.3878!3d-16.6799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef4e3c44e3c03%3A0x4e7c4c2a8d1c14c0!2sGoi%C3%A2nia%2C%20GO!5e0!3m2!1spt-BR!2sbr!4v1680000000000"
@@ -354,13 +328,10 @@ textarea.f-input{resize:vertical;min-height:70px;}
     </div>
   </div>
 
-  <footer>
-    <span class="pi-sym">π</span>
-    π Burguer · Sabor Infinito · Goiânia, GO
-  </footer>
+  <footer><span class="pi-sym">π</span>π Burguer · Sabor Infinito · Goiânia, GO</footer>
 </div>
 
-<!-- MODAL ITEM -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -386,7 +357,7 @@ textarea.f-input{resize:vertical;min-height:70px;}
   </div>
 </div>
 
-<!-- LOGIN ADMIN -->
+<!-- LOGIN -->
 <div class="adm-overlay" id="login-overlay">
   <div class="login-box">
     <h2>🔐 Área Admin</h2>
@@ -401,9 +372,7 @@ textarea.f-input{resize:vertical;min-height:70px;}
 <!-- ADMIN PANEL -->
 <div class="adm-overlay" id="adm-overlay">
   <div class="adm-panel">
-    <h2>
-      ⚙ Painel Admin
-      <span id="db-status-badge" class="db-badge">● Supabase</span>
+    <h2>⚙ Painel Admin <span id="db-status-badge" class="db-badge">● Supabase</span>
       <button class="adm-close" onclick="document.getElementById('adm-overlay').classList.remove('open')">✕</button>
     </h2>
     <div class="adm-tabs">
@@ -412,96 +381,55 @@ textarea.f-input{resize:vertical;min-height:70px;}
       <button class="adm-tab" onclick="admTab('banners',this)">🎞 Banners</button>
       <button class="adm-tab" onclick="admTab('config',this)">🔧 Config</button>
     </div>
-
-    <!-- TAB: PRODUCTS LIST -->
     <div class="adm-form-section active" id="adm-products">
-      <div class="prod-list-adm" id="prod-list-adm">
-        <div style="color:var(--gray);font-size:13px;text-align:center;padding:20px;">Carregando…</div>
-      </div>
+      <div class="prod-list-adm" id="prod-list-adm"><div style="color:var(--gray);font-size:13px;text-align:center;padding:20px;">Carregando…</div></div>
     </div>
-
-    <!-- TAB: ADD PRODUCT -->
     <div class="adm-form-section" id="adm-add">
       <label class="f-label">Nome do produto</label>
       <input type="text" class="f-input" id="p-name" placeholder="Ex: PiBacon">
       <label class="f-label">Descrição curta</label>
       <textarea class="f-input" id="p-desc" placeholder="Ingredientes e destaques…"></textarea>
       <div class="f-row">
-        <div>
-          <label class="f-label">Preço (R$)</label>
-          <input type="number" class="f-input" id="p-price" placeholder="29.90" step="0.01">
-        </div>
-        <div>
-          <label class="f-label">Categoria</label>
+        <div><label class="f-label">Preço (R$)</label><input type="number" class="f-input" id="p-price" placeholder="29.90" step="0.01"></div>
+        <div><label class="f-label">Categoria</label>
           <select class="f-select" id="p-cat">
-            <option value="burger">🍔 Burger</option>
-            <option value="combo">🍟 Combo</option>
-            <option value="bebida">🥤 Bebida</option>
-            <option value="sobremesa">🍦 Sobremesa</option>
-            <option value="extra">➕ Extra</option>
+            <option value="burger">🍔 Burger</option><option value="combo">🍟 Combo</option>
+            <option value="bebida">🥤 Bebida</option><option value="sobremesa">🍦 Sobremesa</option><option value="extra">➕ Extra</option>
           </select>
         </div>
       </div>
       <label class="f-label">Tag / Destaque</label>
-      <select class="f-select" id="p-tag">
-        <option value="">Nenhuma</option>
-        <option value="hit">🔥 Hit</option>
-        <option value="novo">✨ Novo</option>
-        <option value="smash">Smash</option>
-      </select>
-      <label class="f-label">Foto do produto (base64)</label>
+      <select class="f-select" id="p-tag"><option value="">Nenhuma</option><option value="hit">🔥 Hit</option><option value="novo">✨ Novo</option><option value="smash">Smash</option></select>
+      <label class="f-label">Foto do produto</label>
       <div class="img-upload-area" id="upload-area-prod">
         <input type="file" accept="image/*" id="p-img-file" onchange="previewImg('p-img-file','p-img-preview','upload-area-prod')">
-        <span>📷</span>
-        <p>Clique para selecionar imagem</p>
+        <span>📷</span><p>Clique para selecionar imagem</p>
       </div>
       <img id="p-img-preview" class="img-preview">
       <label class="f-label">Aparece em Destaque?</label>
-      <select class="f-select" id="p-feat">
-        <option value="0">Não</option>
-        <option value="1">Sim</option>
-      </select>
+      <select class="f-select" id="p-feat"><option value="0">Não</option><option value="1">Sim</option></select>
       <button class="f-btn" id="save-prod-btn" onclick="saveProduct()">💾 Salvar Produto</button>
     </div>
-
-    <!-- TAB: BANNERS -->
     <div class="adm-form-section" id="adm-banners">
-      <label class="f-label">Título do Banner</label>
-      <input type="text" class="f-input" id="b-title" placeholder="Ex: PiBacon Irresistível">
-      <label class="f-label">Subtítulo</label>
-      <input type="text" class="f-input" id="b-sub" placeholder="Ex: Cream cheese · Bacon duplo">
-      <label class="f-label">Badge (opcional)</label>
-      <input type="text" class="f-input" id="b-badge" placeholder="Ex: 🔥 Mais pedido hoje">
+      <label class="f-label">Título do Banner</label><input type="text" class="f-input" id="b-title" placeholder="Ex: PiBacon Irresistível">
+      <label class="f-label">Subtítulo</label><input type="text" class="f-input" id="b-sub" placeholder="Ex: Cream cheese · Bacon duplo">
+      <label class="f-label">Badge (opcional)</label><input type="text" class="f-input" id="b-badge" placeholder="Ex: 🔥 Mais pedido hoje">
       <label class="f-label">Tipo do Badge</label>
-      <select class="f-select" id="b-badge-type">
-        <option value="gold">Dourado</option>
-        <option value="green">Verde</option>
-        <option value="red">Vermelho</option>
-      </select>
+      <select class="f-select" id="b-badge-type"><option value="gold">Dourado</option><option value="green">Verde</option><option value="red">Vermelho</option></select>
       <label class="f-label">Imagem do banner</label>
       <div class="img-upload-area" id="upload-area-banner">
         <input type="file" accept="image/*" id="b-img-file" onchange="previewImg('b-img-file','b-img-preview','upload-area-banner')">
-        <span>🖼</span>
-        <p>Clique para selecionar imagem</p>
+        <span>🖼</span><p>Clique para selecionar imagem</p>
       </div>
       <img id="b-img-preview" class="img-preview">
       <button class="f-btn" id="save-banner-btn" onclick="saveBanner()">💾 Adicionar Banner</button>
-      <div style="margin-top:16px;">
-        <div class="f-label" style="margin-bottom:8px;">Banners cadastrados</div>
-        <div class="banner-adm-list" id="banner-adm-list"></div>
-      </div>
+      <div style="margin-top:16px;"><div class="f-label" style="margin-bottom:8px;">Banners cadastrados</div><div class="banner-adm-list" id="banner-adm-list"></div></div>
     </div>
-
-    <!-- TAB: CONFIG -->
     <div class="adm-form-section" id="adm-config">
-      <label class="f-label">Número WhatsApp (com DDD, sem espaço)</label>
-      <input type="text" class="f-input" id="cfg-wa" placeholder="5562999999999">
-      <label class="f-label">Endereço da hamburgueria</label>
-      <input type="text" class="f-input" id="cfg-addr" placeholder="Rua Exemplo, 123 — Goiânia, GO">
-      <label class="f-label">Link embed Google Maps</label>
-      <textarea class="f-input" id="cfg-map" placeholder="Cole aqui o src do iframe do Google Maps…"></textarea>
-      <label class="f-label">Senha Admin (deixe vazio para manter)</label>
-      <input type="password" class="f-input" id="cfg-pw" placeholder="Nova senha">
+      <label class="f-label">Número WhatsApp</label><input type="text" class="f-input" id="cfg-wa" placeholder="5562999999999">
+      <label class="f-label">Endereço</label><input type="text" class="f-input" id="cfg-addr" placeholder="Rua Exemplo, 123 — Goiânia, GO">
+      <label class="f-label">Link embed Google Maps</label><textarea class="f-input" id="cfg-map" placeholder="Cole o src do iframe aqui…"></textarea>
+      <label class="f-label">Nova senha Admin (vazio = manter)</label><input type="password" class="f-input" id="cfg-pw" placeholder="Nova senha">
       <button class="f-btn" id="save-cfg-btn" onclick="saveConfig()">💾 Salvar Configurações</button>
     </div>
   </div>
@@ -510,653 +438,200 @@ textarea.f-input{resize:vertical;min-height:70px;}
 <div id="toast"></div>
 
 <script>
-// =====================================================
-// SUPABASE CONFIG
-// =====================================================
-const SUPABASE_URL  = 'https://cwjlkovqpdpmtgblidrv.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3amxrb3ZxcGRwbXRnYmxpZHJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODczODYsImV4cCI6MjA4OTM2MzM4Nn0.-AhhMLSUOhjZqE1SCfK4B1tCYm0atguUqPtRpSi-sKs';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://cwjlkovqpdpmtgblidrv.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3amxrb3ZxcGRwbXRnYmxpZHJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODczODYsImV4cCI6MjA4OTM2MzM4Nn0.-AhhMLSUOhjZqE1SCfK4B1tCYm0atguUqPtRpSi-sKs';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// =====================================================
-// DEFAULT SEED DATA (used only on first run)
-// =====================================================
-const SEED_PRODUCTS = [
-  { name:'PiBacon',    descr:'Pão brioche · cream cheese de bacon · blend 130g · cheddar · cebola roxa · bacon em dobro · maionese caseira', price:32.90, cat:'burger', tag:'hit',   feat:true, img:null },
-  { name:'PiClássico', descr:'Pão brioche · blend 130g · cheddar · cebola roxa · bacon · tomate · alface · maionese caseira',               price:28.90, cat:'burger', tag:'novo',  feat:true, img:null },
-  { name:'PiDouble',   descr:'Pão brioche · dois blends 130g · queijo duplo · molho especial π · picles artesanal',                         price:39.90, cat:'burger', tag:'smash', feat:true, img:null },
+const SEED_PRODUCTS=[
+  {name:'PiBacon',descr:'Pão brioche · cream cheese de bacon · blend 130g · cheddar · cebola roxa · bacon em dobro · maionese caseira',price:32.90,cat:'burger',tag:'hit',feat:true,img:null},
+  {name:'PiClássico',descr:'Pão brioche · blend 130g · cheddar · cebola roxa · bacon · tomate · alface · maionese caseira',price:28.90,cat:'burger',tag:'novo',feat:true,img:null},
+  {name:'PiDouble',descr:'Pão brioche · dois blends 130g · queijo duplo · molho especial π · picles artesanal',price:39.90,cat:'burger',tag:'smash',feat:true,img:null},
 ];
-const SEED_BANNERS = [
-  { title:'PiBacon',   title_highlight:'Pi', sub:'Cream cheese · Cheddar · Bacon duplo',  badge:'🔥 Mais pedido hoje',    badge_type:'red',   img:null },
-  { title:'PiClássico',title_highlight:'Pi', sub:'O sabor equilibrado perfeito',          badge:'✨ Novo no cardápio',     badge_type:'green', img:null },
-  { title:'Combos',    title_highlight:'',   sub:'Economize mais pedindo combos!',         badge:'💰 Promoção especial',   badge_type:'gold',  img:null },
+const SEED_BANNERS=[
+  {title:'PiBacon',title_highlight:'Pi',sub:'Cream cheese · Cheddar · Bacon duplo',badge:'🔥 Mais pedido hoje',badge_type:'red',img:null},
+  {title:'PiClássico',title_highlight:'Pi',sub:'O sabor equilibrado perfeito',badge:'✨ Novo no cardápio',badge_type:'green',img:null},
+  {title:'Combos',title_highlight:'',sub:'Economize mais pedindo combos!',badge:'💰 Promoção especial',badge_type:'gold',img:null},
 ];
-const SEED_CONFIG = {
-  id: 1,
-  wa:   '5562999999999',
-  addr: 'Goiânia, Goiás — Brasil',
-  map:  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d245890.34!2d-49.3878!3d-16.6799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef4e3c44e3c03%3A0x4e7c4c2a8d1c14c0!2sGoi%C3%A2nia%2C%20GO!5e0!3m2!1spt-BR!2sbr!4v1680000000000',
-  pw:   'admin123',
-};
+const SEED_CONFIG={id:1,wa:'5562999999999',addr:'Goiânia, Goiás — Brasil',map:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d245890.34!2d-49.3878!3d-16.6799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef4e3c44e3c03%3A0x4e7c4c2a8d1c14c0!2sGoi%C3%A2nia%2C%20GO!5e0!3m2!1spt-BR!2sbr!4v1680000000000',pw:'admin123'};
 
-// =====================================================
-// IN-MEMORY CACHE
-// =====================================================
-let PRODUCTS = [];
-let BANNERS  = [];
-let CONFIG   = { ...SEED_CONFIG };
+let PRODUCTS=[],BANNERS=[],CONFIG={...SEED_CONFIG};
 
-// =====================================================
-// SUPABASE: INIT TABLES VIA REST API (SQL RPC)
-// Creates tables if they don't exist, seeds if empty
-// =====================================================
-async function initDB() {
-  console.log('🔌 Conectando ao Supabase...');
+async function initDB(){
+  const{data:cfgData,error:cfgErr}=await sb.from('pb_config').select('*').eq('id',1).maybeSingle();
+  if(cfgErr){fallback();return false;}
+  if(!cfgData){await sb.from('pb_config').insert(SEED_CONFIG);CONFIG={...SEED_CONFIG};}else{CONFIG=cfgData;}
+  const{data:prodsData,error:prodsErr}=await sb.from('pb_products').select('*').order('id');
+  if(prodsErr){fallback();return false;}
+  if(!prodsData||prodsData.length===0){await sb.from('pb_products').insert(SEED_PRODUCTS);const{data:p2}=await sb.from('pb_products').select('*').order('id');PRODUCTS=p2||[];}else{PRODUCTS=prodsData;}
+  const{data:bansData,error:bansErr}=await sb.from('pb_banners').select('*').order('id');
+  if(bansErr){fallback();return false;}
+  if(!bansData||bansData.length===0){await sb.from('pb_banners').insert(SEED_BANNERS);const{data:b2}=await sb.from('pb_banners').select('*').order('id');BANNERS=b2||[];}else{BANNERS=bansData;}
+  setDbBadge(true);return true;
+}
+function fallback(){PRODUCTS=SEED_PRODUCTS.map((p,i)=>({...p,id:i+1}));BANNERS=SEED_BANNERS.map((b,i)=>({...b,id:i+1}));CONFIG={...SEED_CONFIG};setDbBadge(false);}
+function setDbBadge(ok){const el=document.getElementById('db-status-badge');if(!el)return;if(ok){el.textContent='● Conectado';el.className='db-badge';}else{el.textContent='● Offline';el.className='db-badge err';}}
+async function reloadProducts(){const{data}=await sb.from('pb_products').select('*').order('id');if(data)PRODUCTS=data;}
+async function reloadBanners(){const{data}=await sb.from('pb_banners').select('*').order('id');if(data)BANNERS=data;}
 
-  // --- CONFIG ---
-  const { data: cfgData, error: cfgErr } = await sb.from('pb_config').select('*').eq('id',1).maybeSingle();
-  if (cfgErr) {
-    console.error('❌ pb_config erro:', cfgErr.code, cfgErr.message, cfgErr.details, cfgErr.hint);
-    fallback(); return false;
-  }
-  if (!cfgData) {
-    console.log('📝 Inserindo config padrão...');
-    const { error: cfgInsErr } = await sb.from('pb_config').insert(SEED_CONFIG);
-    if (cfgInsErr) { console.error('❌ pb_config insert:', cfgInsErr.message); fallback(); return false; }
-    CONFIG = { ...SEED_CONFIG };
-  } else {
-    CONFIG = cfgData;
-  }
-  console.log('✅ Config OK');
-
-  // --- PRODUCTS ---
-  const { data: prodsData, error: prodsErr } = await sb.from('pb_products').select('*').order('id');
-  if (prodsErr) {
-    console.error('❌ pb_products erro:', prodsErr.code, prodsErr.message, prodsErr.details, prodsErr.hint);
-    fallback(); return false;
-  }
-  if (!prodsData || prodsData.length === 0) {
-    const { error: pInsErr } = await sb.from('pb_products').insert(SEED_PRODUCTS);
-    if (pInsErr) { console.error('❌ pb_products insert:', pInsErr.message); }
-    const { data: p2 } = await sb.from('pb_products').select('*').order('id');
-    PRODUCTS = p2 || [];
-  } else {
-    PRODUCTS = prodsData;
-  }
-  console.log('✅ Produtos OK —', PRODUCTS.length, 'itens');
-
-  // --- BANNERS ---
-  const { data: bansData, error: bansErr } = await sb.from('pb_banners').select('*').order('id');
-  if (bansErr) {
-    console.error('❌ pb_banners erro:', bansErr.code, bansErr.message, bansErr.details, bansErr.hint);
-    fallback(); return false;
-  }
-  if (!bansData || bansData.length === 0) {
-    const { error: bInsErr } = await sb.from('pb_banners').insert(SEED_BANNERS);
-    if (bInsErr) { console.error('❌ pb_banners insert:', bInsErr.message); }
-    const { data: b2 } = await sb.from('pb_banners').select('*').order('id');
-    BANNERS = b2 || [];
-  } else {
-    BANNERS = bansData;
-  }
-  console.log('✅ Banners OK —', BANNERS.length, 'itens');
-
-  setDbBadge(true);
-  return true;
+function initPhysicsScroll(el){
+  let isDragging=false,startX=0,scrollLeft=0,velX=0,lastX=0,lastTime=0,rafId=null,didDrag=false;
+  function momentum(){if(Math.abs(velX)<0.3){velX=0;return;}velX*=0.92;el.scrollLeft+=velX;const max=el.scrollWidth-el.clientWidth;if(el.scrollLeft<0){el.scrollLeft=0;velX*=-0.4;}if(el.scrollLeft>max){el.scrollLeft=max;velX*=-0.4;}rafId=requestAnimationFrame(momentum);}
+  el.addEventListener('mousedown',e=>{isDragging=true;didDrag=false;startX=e.pageX-el.offsetLeft;scrollLeft=el.scrollLeft;lastX=e.pageX;lastTime=Date.now();velX=0;cancelAnimationFrame(rafId);el.classList.add('grabbing');});
+  el.addEventListener('mousemove',e=>{if(!isDragging)return;e.preventDefault();const x=e.pageX-el.offsetLeft,walk=(x-startX)*1.2;el.scrollLeft=scrollLeft-walk;const now=Date.now(),dt=now-lastTime||1;velX=(e.pageX-lastX)/dt*14;lastX=e.pageX;lastTime=now;if(Math.abs(walk)>4)didDrag=true;});
+  const end=()=>{if(!isDragging)return;isDragging=false;el.classList.remove('grabbing');if(Math.abs(velX)>1)rafId=requestAnimationFrame(momentum);};
+  el.addEventListener('mouseup',end);el.addEventListener('mouseleave',end);
+  el.addEventListener('touchstart',e=>{didDrag=false;startX=e.touches[0].pageX-el.offsetLeft;scrollLeft=el.scrollLeft;lastX=e.touches[0].pageX;lastTime=Date.now();velX=0;cancelAnimationFrame(rafId);},{passive:true});
+  el.addEventListener('touchmove',e=>{const x=e.touches[0].pageX-el.offsetLeft,walk=(x-startX)*1.1;el.scrollLeft=scrollLeft-walk;const now=Date.now(),dt=now-lastTime||1;velX=(e.touches[0].pageX-lastX)/dt*14;lastX=e.touches[0].pageX;lastTime=now;if(Math.abs(walk)>4)didDrag=true;},{passive:true});
+  el.addEventListener('touchend',()=>{if(Math.abs(velX)>1)rafId=requestAnimationFrame(momentum);});
+  el.addEventListener('click',e=>{if(didDrag){e.stopPropagation();e.preventDefault();didDrag=false;}},true);
 }
 
-function fallback() {
-  console.warn('⚠️ Usando dados padrão (offline)');
-  PRODUCTS = SEED_PRODUCTS.map((p,i)=>({...p, id: i+1}));
-  BANNERS  = SEED_BANNERS.map((b,i)=>({...b, id: i+1}));
-  CONFIG   = { ...SEED_CONFIG };
-  setDbBadge(false);
+let carouselIdx=0,carouselTimer;
+function renderCarousel(){
+  const track=document.getElementById('carousel-track'),dots=document.getElementById('carousel-dots');
+  track.innerHTML=BANNERS.map(b=>`<div class="slide"><div class="slide-bg"></div>${b.img?`<img class="slide-img-cover" src="${b.img}" alt="">`:''}<div class="slide-content"><div class="slide-text"><div class="slide-badge ${b.badge_type==='green'?'green':b.badge_type==='red'?'red':''}">${b.badge||''}</div><div class="slide-title">${b.title_highlight?`<span>${b.title_highlight}</span>${b.title.replace(b.title_highlight,'')}`:b.title}</div><div class="slide-sub">${b.sub||''}</div></div>${b.img?`<div class="slide-product-img"><img src="${b.img}" alt="${b.title}" onerror="this.style.display='none'"></div>`:`<div class="slide-product-img"><span class="slide-emoji">🍔</span></div>`}</div></div>`).join('');
+  dots.innerHTML=BANNERS.map((_,i)=>`<div class="cdot ${i===0?'active':''}" onclick="goSlide(${i})"></div>`).join('');
+  carouselIdx=0;startCarousel();
 }
+function goSlide(i){carouselIdx=(i+BANNERS.length)%BANNERS.length;document.getElementById('carousel-track').style.transform=`translateX(-${carouselIdx*100}%)`;document.querySelectorAll('.cdot').forEach((d,j)=>d.classList.toggle('active',j===carouselIdx));}
+function moveCarousel(dir){goSlide(carouselIdx+dir);startCarousel();}
+function startCarousel(){clearInterval(carouselTimer);carouselTimer=setInterval(()=>goSlide(carouselIdx+1),4500);}
 
-function setDbBadge(ok) {
-  const el = document.getElementById('db-status-badge');
-  if (!el) return;
-  if (ok) { el.textContent='● Conectado'; el.className='db-badge'; }
-  else     { el.textContent='● Offline';   el.className='db-badge err'; }
-}
-
-// =====================================================
-// RELOAD DATA FROM SUPABASE
-// =====================================================
-async function reloadProducts() {
-  const { data } = await sb.from('pb_products').select('*').order('id');
-  if (data) PRODUCTS = data;
-}
-async function reloadBanners() {
-  const { data } = await sb.from('pb_banners').select('*').order('id');
-  if (data) BANNERS = data;
-}
-async function reloadConfig() {
-  const { data } = await sb.from('pb_config').select('*').eq('id',1).single();
-  if (data) CONFIG = data;
-}
-
-// =====================================================
-// PHYSICS SCROLL
-// =====================================================
-function initPhysicsScroll(el) {
-  let isDragging=false, startX=0, scrollLeft=0, velX=0, lastX=0, lastTime=0, rafId=null, didDrag=false;
-  function momentum() {
-    if (Math.abs(velX) < 0.3) { velX=0; return; }
-    velX *= 0.92;
-    el.scrollLeft += velX;
-    const max = el.scrollWidth - el.clientWidth;
-    if (el.scrollLeft < 0)   { el.scrollLeft=0;   velX *= -0.4; }
-    if (el.scrollLeft > max) { el.scrollLeft=max;  velX *= -0.4; }
-    rafId = requestAnimationFrame(momentum);
-  }
-  el.addEventListener('mousedown', e=>{
-    isDragging=true; didDrag=false;
-    startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft;
-    lastX=e.pageX; lastTime=Date.now(); velX=0;
-    cancelAnimationFrame(rafId); el.classList.add('grabbing');
-  });
-  el.addEventListener('mousemove', e=>{
-    if(!isDragging) return; e.preventDefault();
-    const x=e.pageX-el.offsetLeft, walk=(x-startX)*1.2;
-    el.scrollLeft=scrollLeft-walk;
-    const now=Date.now(), dt=now-lastTime||1;
-    velX=(e.pageX-lastX)/dt*14; lastX=e.pageX; lastTime=now;
-    if(Math.abs(walk)>4) didDrag=true;
-  });
-  const end=()=>{ if(!isDragging) return; isDragging=false; el.classList.remove('grabbing'); if(Math.abs(velX)>1) rafId=requestAnimationFrame(momentum); };
-  el.addEventListener('mouseup',end); el.addEventListener('mouseleave',end);
-  el.addEventListener('touchstart',e=>{ didDrag=false; startX=e.touches[0].pageX-el.offsetLeft; scrollLeft=el.scrollLeft; lastX=e.touches[0].pageX; lastTime=Date.now(); velX=0; cancelAnimationFrame(rafId); },{passive:true});
-  el.addEventListener('touchmove',e=>{ const x=e.touches[0].pageX-el.offsetLeft,walk=(x-startX)*1.1; el.scrollLeft=scrollLeft-walk; const now=Date.now(),dt=now-lastTime||1; velX=(e.touches[0].pageX-lastX)/dt*14; lastX=e.touches[0].pageX; lastTime=now; if(Math.abs(walk)>4) didDrag=true; },{passive:true});
-  el.addEventListener('touchend',()=>{ if(Math.abs(velX)>1) rafId=requestAnimationFrame(momentum); });
-  el.addEventListener('click',e=>{ if(didDrag){e.stopPropagation();e.preventDefault();didDrag=false;} },true);
-}
-
-// =====================================================
-// RENDER CAROUSEL
-// =====================================================
-let carouselIdx=0, carouselTimer;
-function renderCarousel() {
-  const track = document.getElementById('carousel-track');
-  const dots  = document.getElementById('carousel-dots');
-  track.innerHTML = BANNERS.map(b=>`
-    <div class="slide">
-      <div class="slide-bg"></div>
-      ${b.img ? `<img class="slide-img-cover" src="${b.img}" alt="">` : ''}
-      <div class="slide-content">
-        <div class="slide-text">
-          <div class="slide-badge ${b.badge_type==='green'?'green':b.badge_type==='red'?'red':''}">${b.badge||''}</div>
-          <div class="slide-title">${b.title_highlight?`<span>${b.title_highlight}</span>${b.title.replace(b.title_highlight,'')}`:b.title}</div>
-          <div class="slide-sub">${b.sub||''}</div>
-        </div>
-        ${b.img
-          ? `<div class="slide-product-img"><img src="${b.img}" alt="${b.title}" onerror="this.style.display='none'"></div>`
-          : `<div class="slide-product-img"><span class="slide-emoji">🍔</span></div>`}
-      </div>
-    </div>`).join('');
-  dots.innerHTML = BANNERS.map((_,i)=>`<div class="cdot ${i===0?'active':''}" onclick="goSlide(${i})"></div>`).join('');
-  carouselIdx = 0;
-  startCarousel();
-}
-function goSlide(i) {
-  carouselIdx = (i+BANNERS.length) % BANNERS.length;
-  document.getElementById('carousel-track').style.transform = `translateX(-${carouselIdx*100}%)`;
-  document.querySelectorAll('.cdot').forEach((d,j)=>d.classList.toggle('active',j===carouselIdx));
-}
-function moveCarousel(dir) { goSlide(carouselIdx+dir); startCarousel(); }
-function startCarousel() {
-  clearInterval(carouselTimer);
-  carouselTimer = setInterval(()=>goSlide(carouselIdx+1), 4500);
-}
-
-// =====================================================
-// RENDER PRODUCTS
-// =====================================================
 let curCat='all';
-function renderProducts(filter='all', search='') {
-  const feat = PRODUCTS.filter(p=> p.feat && (filter==='all'||filter===p.cat) && matchSearch(p,search));
-  const all  = PRODUCTS.filter(p=> (filter==='all'||filter===p.cat) && matchSearch(p,search) && p.cat!=='extra');
-
-  const fsec = document.getElementById('feat-section');
-  const fs   = document.getElementById('feat-scroll');
-  fsec.style.display = feat.length ? 'block' : 'none';
-  fs.innerHTML = feat.map(p=>`
-    <div class="feat-card" onclick="openModal(${p.id})">
-      ${p.tag?`<span class="feat-badge ${p.tag==='hit'?'hit':p.tag==='novo'?'novo':'esp'}">${tagLabel(p.tag)}</span>`:''}
-      <div class="feat-img">${p.img?`<img src="${p.img}" alt="${esc(p.name)}" loading="lazy">`:'<span style="font-size:44px">🍔</span>'}</div>
-      <div class="feat-info">
-        <h4>${esc(p.name)}</h4>
-        <p>${esc(p.descr)}</p>
-        <div class="feat-footer">
-          <div class="price">R$${fmtPrice(p.price)}</div>
-          <button class="add-btn" onclick="event.stopPropagation();openWA('${esc(p.name)}',${p.price})">+</button>
-        </div>
-      </div>
-    </div>`).join('');
+function renderProducts(filter='all',search=''){
+  const feat=PRODUCTS.filter(p=>p.feat&&(filter==='all'||filter===p.cat)&&matchSearch(p,search));
+  const all=PRODUCTS.filter(p=>(filter==='all'||filter===p.cat)&&matchSearch(p,search)&&p.cat!=='extra');
+  const fsec=document.getElementById('feat-section'),fs=document.getElementById('feat-scroll');
+  fsec.style.display=feat.length?'block':'none';
+  fs.innerHTML=feat.map(p=>`<div class="feat-card" onclick="openModal(${p.id})">${p.tag?`<span class="feat-badge ${p.tag==='hit'?'hit':p.tag==='novo'?'novo':'esp'}">${tagLabel(p.tag)}</span>`:''}<div class="feat-img">${p.img?`<img src="${p.img}" alt="${esc(p.name)}" loading="lazy">`:'<span style="font-size:44px">🍔</span>'}</div><div class="feat-info"><h4>${esc(p.name)}</h4><p>${esc(p.descr)}</p><div class="feat-footer"><div class="price">R$${fmtPrice(p.price)}</div><button class="add-btn" onclick="event.stopPropagation();openWA('${esc(p.name)}',${p.price})">+</button></div></div></div>`).join('');
   initPhysicsScroll(fs);
-
-  const ml = document.getElementById('menu-list');
-  ml.innerHTML = all.map(p=>`
-    <div class="menu-item" onclick="openModal(${p.id})">
-      <div class="mi-img">${p.img?`<img src="${p.img}" alt="${esc(p.name)}" loading="lazy">`:'🍔'}</div>
-      <div class="mi-body">
-        <div>
-          <div class="mi-name">${esc(p.name)}</div>
-          <div class="mi-desc">${esc(p.descr)}</div>
-          ${p.tag?`<div class="mi-tags"><span class="tag ${p.tag==='hit'?'tag-h':p.tag==='novo'?'tag-n':'tag-s'}">${tagLabel(p.tag)}</span></div>`:''}
-        </div>
-        <div class="mi-bottom">
-          <div class="mi-price">R$${fmtPrice(p.price)}</div>
-          <button class="mi-add" onclick="event.stopPropagation();openWA('${esc(p.name)}',${p.price})">+</button>
-        </div>
-      </div>
-    </div>`).join('');
-  if (!all.length) ml.innerHTML=`<div style="padding:30px;text-align:center;color:var(--gray);font-weight:700;">Nenhum item encontrado.</div>`;
+  const ml=document.getElementById('menu-list');
+  ml.innerHTML=all.map(p=>`<div class="menu-item" onclick="openModal(${p.id})"><div class="mi-img">${p.img?`<img src="${p.img}" alt="${esc(p.name)}" loading="lazy">`:'🍔'}</div><div class="mi-body"><div><div class="mi-name">${esc(p.name)}</div><div class="mi-desc">${esc(p.descr)}</div>${p.tag?`<div class="mi-tags"><span class="tag ${p.tag==='hit'?'tag-h':p.tag==='novo'?'tag-n':'tag-s'}">${tagLabel(p.tag)}</span></div>`:''}</div><div class="mi-bottom"><div class="mi-price">R$${fmtPrice(p.price)}</div><button class="mi-add" onclick="event.stopPropagation();openWA('${esc(p.name)}',${p.price})">+</button></div></div></div>`).join('');
+  if(!all.length)ml.innerHTML=`<div style="padding:30px;text-align:center;color:var(--gray);font-weight:700;">Nenhum item encontrado.</div>`;
 }
+function matchSearch(p,s){return !s||p.name.toLowerCase().includes(s)||(p.descr||'').toLowerCase().includes(s);}
+function fmtPrice(v){return Number(v).toFixed(2).replace('.',',');}
+function tagLabel(t){return t==='hit'?'🔥 Hit':t==='novo'?'✨ Novo':'Smash';}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-function matchSearch(p,s) { return !s || p.name.toLowerCase().includes(s) || ( p.descr||'').toLowerCase().includes(s); }
-function fmtPrice(v) { return Number(v).toFixed(2).replace('.',','); }
-function tagLabel(t) { return t==='hit'?'🔥 Hit':t==='novo'?'✨ Novo':'Smash'; }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-// =====================================================
-// MODAL
-// =====================================================
-let curModal=null, modalQty=1;
-function openModal(id) {
-  const p = PRODUCTS.find(x=>x.id===id);
-  if (!p) return;
-  curModal=p; modalQty=1;
-  document.getElementById('modal-name').textContent  = p.name;
-  document.getElementById('modal-desc').textContent  = p.descr;
-  document.getElementById('modal-price').textContent = `R$${fmtPrice(p.price)}`;
-  document.getElementById('modal-qty').textContent   = 1;
-  document.getElementById('modal-img-box').innerHTML = p.img
-    ? `<img src="${p.img}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover">`
-    : `<span style="font-size:90px">🍔</span>`;
-  document.getElementById('modal-ings').innerHTML = ( p.descr||'').split('·').map(s=>s.trim()).filter(Boolean).map(i=>`<span class="ing-chip">${esc(i)}</span>`).join('');
-  document.getElementById('modal-wa-btn').onclick = ()=>{
-    openWA(p.name, p.price, modalQty);
-    document.getElementById('modal-overlay').classList.remove('open');
-  };
+let curModal=null,modalQty=1;
+function openModal(id){
+  const p=PRODUCTS.find(x=>x.id===id);if(!p)return;
+  curModal=p;modalQty=1;
+  document.getElementById('modal-name').textContent=p.name;
+  document.getElementById('modal-desc').textContent=p.descr;
+  document.getElementById('modal-price').textContent=`R$${fmtPrice(p.price)}`;
+  document.getElementById('modal-qty').textContent=1;
+  document.getElementById('modal-img-box').innerHTML=p.img?`<img src="${p.img}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:90px">🍔</span>`;
+  document.getElementById('modal-ings').innerHTML=(p.descr||'').split('·').map(s=>s.trim()).filter(Boolean).map(i=>`<span class="ing-chip">${esc(i)}</span>`).join('');
+  document.getElementById('modal-wa-btn').onclick=()=>{openWA(p.name,p.price,modalQty);document.getElementById('modal-overlay').classList.remove('open');};
   document.getElementById('modal-overlay').classList.add('open');
 }
-function closeModal(e) { if(e.target===document.getElementById('modal-overlay')) document.getElementById('modal-overlay').classList.remove('open'); }
-function changeQty(d) { modalQty=Math.max(1,modalQty+d); document.getElementById('modal-qty').textContent=modalQty; }
+function closeModal(e){if(e.target===document.getElementById('modal-overlay'))document.getElementById('modal-overlay').classList.remove('open');}
+function changeQty(d){modalQty=Math.max(1,modalQty+d);document.getElementById('modal-qty').textContent=modalQty;}
 
-// =====================================================
-// WHATSAPP
-// =====================================================
-function openWA(name, price, qty=1) {
-  const total = (price*qty).toFixed(2).replace('.',',');
-  const msg = encodeURIComponent(`Olá! Quero fazer um pedido 🍔\n\n*${qty}x ${name}* — R$${total}\n\nPor favor, me informe disponibilidade e formas de pagamento. Obrigado!`);
-  window.open(`https://wa.me/${CONFIG.wa}?text=${msg}`, '_blank');
-}
-document.getElementById('wa-main-btn').addEventListener('click', e=>{
-  e.preventDefault();
-  window.open(`https://wa.me/${CONFIG.wa}?text=${encodeURIComponent('Olá! Quero fazer meu pedido na π Burguer! 🍔')}`, '_blank');
-});
+function openWA(name,price,qty=1){const total=(price*qty).toFixed(2).replace('.',',');const msg=encodeURIComponent(`Olá! Quero fazer um pedido 🍔\n\n*${qty}x ${name}* — R$${total}\n\nPor favor, me informe disponibilidade e formas de pagamento. Obrigado!`);window.open(`https://wa.me/${CONFIG.wa}?text=${msg}`,'_blank');}
+document.getElementById('wa-main-btn').addEventListener('click',e=>{e.preventDefault();window.open(`https://wa.me/${CONFIG.wa}?text=${encodeURIComponent('Olá! Quero fazer meu pedido na π Burguer! 🍔')}`,'_blank');});
 
-// =====================================================
-// FILTERS
-// =====================================================
-function filterCat(cat, btn) {
-  curCat=cat;
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderProducts(cat, document.getElementById('search-input').value.toLowerCase());
-}
-function filterMenu(q) { renderProducts(curCat, q.toLowerCase()); }
+function filterCat(cat,btn){curCat=cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProducts(cat,document.getElementById('search-input').value.toLowerCase());}
+function filterMenu(q){renderProducts(curCat,q.toLowerCase());}
 
-// =====================================================
-// ADMIN AUTH
-// =====================================================
-function openAdminGate() {
-  document.getElementById('admin-pw-input').value='';
-  document.getElementById('login-error').style.display='none';
-  document.getElementById('login-overlay').classList.add('open');
-  setTimeout(()=>document.getElementById('admin-pw-input').focus(), 100);
-}
-function checkLogin() {
-  const pw = document.getElementById('admin-pw-input').value;
-  if (pw === CONFIG.pw) {
-    document.getElementById('login-overlay').classList.remove('open');
-    openAdminPanel();
-  } else {
-    document.getElementById('login-error').style.display='block';
-    document.getElementById('admin-pw-input').value='';
-  }
-}
-function openAdminPanel() {
-  renderAdmProducts();
-  renderAdmBanners();
-  loadConfigForm();
-  document.getElementById('adm-overlay').classList.add('open');
-}
-function admTab(name, btn) {
-  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.adm-form-section').forEach(s=>s.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('adm-'+name).classList.add('active');
+function openAdminGate(){document.getElementById('admin-pw-input').value='';document.getElementById('login-error').style.display='none';document.getElementById('login-overlay').classList.add('open');setTimeout(()=>document.getElementById('admin-pw-input').focus(),100);}
+function checkLogin(){const pw=document.getElementById('admin-pw-input').value;if(pw===CONFIG.pw){document.getElementById('login-overlay').classList.remove('open');openAdminPanel();}else{document.getElementById('login-error').style.display='block';document.getElementById('admin-pw-input').value='';}}
+function openAdminPanel(){renderAdmProducts();renderAdmBanners();loadConfigForm();document.getElementById('adm-overlay').classList.add('open');}
+function admTab(name,btn){document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.adm-form-section').forEach(s=>s.classList.remove('active'));btn.classList.add('active');document.getElementById('adm-'+name).classList.add('active');}
+
+function previewImg(inputId,previewId,areaId){const file=document.getElementById(inputId).files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{const prev=document.getElementById(previewId);prev.src=e.target.result;prev.style.display='block';const area=document.getElementById(areaId);if(area.querySelector('span'))area.querySelector('span').style.display='none';if(area.querySelector('p'))area.querySelector('p').style.display='none';};reader.readAsDataURL(file);}
+function previewEditImg(id){const file=document.getElementById('ef-img-file-'+id).files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{const prev=document.getElementById('ef-img-prev-'+id);prev.src=e.target.result;prev.style.display='block';const area=document.getElementById('ef-upload-area-'+id);if(area.querySelector('span'))area.querySelector('span').style.display='none';if(area.querySelector('p'))area.querySelector('p').style.display='none';};reader.readAsDataURL(file);}
+
+async function saveProduct(){
+  const name=document.getElementById('p-name').value.trim(),descr=document.getElementById('p-desc').value.trim(),price=parseFloat(document.getElementById('p-price').value),cat=document.getElementById('p-cat').value,tag=document.getElementById('p-tag').value||null,feat=document.getElementById('p-feat').value==='1';
+  const prev=document.getElementById('p-img-preview'),img=prev.style.display!=='none'&&prev.src&&prev.src.startsWith('data:')?prev.src:null;
+  if(!name||!descr||isNaN(price)){toast('❗ Preencha nome, descrição e preço!');return;}
+  const btn=document.getElementById('save-prod-btn');btn.disabled=true;btn.textContent='Salvando…';
+  const{error}=await sb.from('pb_products').insert({name,descr,price,cat,tag,feat,img});
+  btn.disabled=false;btn.textContent='💾 Salvar Produto';
+  if(error){toast('❌ Erro: '+error.message);return;}
+  ['p-name','p-desc','p-price'].forEach(id=>document.getElementById(id).value='');prev.style.display='none';
+  document.getElementById('upload-area-prod').querySelector('span').style.display='';document.getElementById('upload-area-prod').querySelector('p').style.display='';
+  await reloadProducts();renderAdmProducts();renderProducts(curCat);toast('✅ Produto salvo!');
 }
 
-// =====================================================
-// IMAGE UPLOAD (base64)
-// =====================================================
-function previewImg(inputId, previewId, areaId) {
-  const file = document.getElementById(inputId).files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e=>{
-    const prev = document.getElementById(previewId);
-    prev.src = e.target.result; prev.style.display='block';
-    const area = document.getElementById(areaId);
-    if (area.querySelector('span')) area.querySelector('span').style.display='none';
-    if (area.querySelector('p'))    area.querySelector('p').style.display='none';
-  };
-  reader.readAsDataURL(file);
-}
-function previewEditImg(id) {
-  const file = document.getElementById('ef-img-file-'+id).files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e=>{
-    const prev = document.getElementById('ef-img-prev-'+id);
-    prev.src=e.target.result; prev.style.display='block';
-    const area = document.getElementById('ef-upload-area-'+id);
-    if (area.querySelector('span')) area.querySelector('span').style.display='none';
-    if (area.querySelector('p'))    area.querySelector('p').style.display='none';
-  };
-  reader.readAsDataURL(file);
+async function deleteProduct(id){
+  if(!confirm('Excluir este produto?'))return;
+  const{error}=await sb.from('pb_products').delete().eq('id',id);
+  if(error){toast('❌ Erro: '+error.message);return;}
+  await reloadProducts();renderAdmProducts();renderProducts(curCat);toast('🗑 Produto excluído.');
 }
 
-// =====================================================
-// SAVE PRODUCT (new)
-// =====================================================
-async function saveProduct() {
-  const name  = document.getElementById('p-name').value.trim();
-  const descr = document.getElementById('p-desc').value.trim();
-  const price = parseFloat(document.getElementById('p-price').value);
-  const cat   = document.getElementById('p-cat').value;
-  const tag   = document.getElementById('p-tag').value || null;
-  const feat  = document.getElementById('p-feat').value === '1';
-  const prev  = document.getElementById('p-img-preview');
-  const img   = prev.style.display!=='none' && prev.src && prev.src.startsWith('data:') ? prev.src : null;
-
-  if (!name||!descr||isNaN(price)) { toast('❗ Preencha nome, descrição e preço!'); return; }
-
-  const btn = document.getElementById('save-prod-btn');
-  btn.disabled=true; btn.textContent='Salvando…';
-
-  const { error } = await sb.from('pb_products').insert({ name, descr, price, cat, tag, feat, img });
-  btn.disabled=false; btn.textContent='💾 Salvar Produto';
-
-  if (error) { toast('❌ Erro ao salvar: '+error.message); return; }
-
-  ['p-name','p-desc','p-price'].forEach(id=>document.getElementById(id).value='');
-  prev.style.display='none';
-  document.getElementById('upload-area-prod').querySelector('span').style.display='';
-  document.getElementById('upload-area-prod').querySelector('p').style.display='';
-
-  await reloadProducts();
-  renderAdmProducts();
-  renderProducts(curCat);
-  toast('✅ Produto salvo!');
-}
-
-// =====================================================
-// DELETE PRODUCT
-// =====================================================
-async function deleteProduct(id) {
-  if (!confirm('Excluir este produto?')) return;
-  const { error } = await sb.from('pb_products').delete().eq('id', id);
-  if (error) { toast('❌ Erro ao excluir: '+error.message); return; }
-  await reloadProducts();
-  renderAdmProducts();
-  renderProducts(curCat);
-  toast('🗑 Produto excluído.');
-}
-
-// =====================================================
-// EDIT PRODUCT (inline)
-// =====================================================
-let currentEditId = null;
-
-function openEditForm(id) {
-  closeAllEditForms();
-  const p = PRODUCTS.find(x=>x.id===id);
-  if (!p) return;
-  currentEditId = id;
-  const container = document.getElementById('edit-form-'+id);
-  if (!container) return;
-  container.innerHTML = `
-    <div class="prod-edit-form">
-      <label class="f-label">Nome</label>
-      <input type="text" class="f-input" id="ef-name-${id}" value="${esc(p.name)}">
-      <label class="f-label">Descrição</label>
-      <textarea class="f-input" id="ef-desc-${id}">${esc(p.descr)}</textarea>
-      <div class="edit-form-row">
-        <div>
-          <label class="f-label">Preço (R$)</label>
-          <input type="number" class="f-input" id="ef-price-${id}" value="${p.price}" step="0.01">
-        </div>
-        <div>
-          <label class="f-label">Categoria</label>
-          <select class="f-select" id="ef-cat-${id}">
-            <option value="burger"    ${p.cat==='burger'   ?'selected':''}>🍔 Burger</option>
-            <option value="combo"     ${p.cat==='combo'    ?'selected':''}>🍟 Combo</option>
-            <option value="bebida"    ${p.cat==='bebida'   ?'selected':''}>🥤 Bebida</option>
-            <option value="sobremesa" ${p.cat==='sobremesa'?'selected':''}>🍦 Sobremesa</option>
-            <option value="extra"     ${p.cat==='extra'    ?'selected':''}>➕ Extra</option>
-          </select>
-        </div>
-      </div>
-      <div class="edit-form-row">
-        <div>
-          <label class="f-label">Tag</label>
-          <select class="f-select" id="ef-tag-${id}">
-            <option value=""      ${!p.tag          ?'selected':''}>Nenhuma</option>
-            <option value="hit"   ${p.tag==='hit'   ?'selected':''}>🔥 Hit</option>
-            <option value="novo"  ${p.tag==='novo'  ?'selected':''}>✨ Novo</option>
-            <option value="smash" ${p.tag==='smash' ?'selected':''}>Smash</option>
-          </select>
-        </div>
-        <div>
-          <label class="f-label">Em Destaque?</label>
-          <select class="f-select" id="ef-feat-${id}">
-            <option value="0" ${!p.feat?'selected':''}>Não</option>
-            <option value="1" ${p.feat ?'selected':''}>Sim</option>
-          </select>
-        </div>
-      </div>
-      <label class="f-label">Trocar foto (opcional)</label>
-      ${p.img ? `<img src="${p.img}" class="edit-img-preview" id="ef-img-prev-${id}" style="display:block">` : `<img class="edit-img-preview" id="ef-img-prev-${id}">`}
-      <div class="img-upload-area" id="ef-upload-area-${id}" style="margin-bottom:12px;">
-        <input type="file" accept="image/*" id="ef-img-file-${id}" onchange="previewEditImg(${id})">
-        <span>📷</span><p>Clique para trocar a imagem</p>
-      </div>
-      <div class="edit-actions">
-        <button class="edit-save-btn" id="ef-save-${id}" onclick="saveEditProduct(${id})">💾 Salvar</button>
-        <button class="edit-cancel-btn" onclick="closeAllEditForms()">Cancelar</button>
-      </div>
-    </div>`;
+let currentEditId=null;
+function openEditForm(id){
+  closeAllEditForms();const p=PRODUCTS.find(x=>x.id===id);if(!p)return;currentEditId=id;
+  const container=document.getElementById('edit-form-'+id);if(!container)return;
+  container.innerHTML=`<div class="prod-edit-form"><label class="f-label">Nome</label><input type="text" class="f-input" id="ef-name-${id}" value="${esc(p.name)}"><label class="f-label">Descrição</label><textarea class="f-input" id="ef-desc-${id}">${esc(p.descr)}</textarea><div class="edit-form-row"><div><label class="f-label">Preço (R$)</label><input type="number" class="f-input" id="ef-price-${id}" value="${p.price}" step="0.01"></div><div><label class="f-label">Categoria</label><select class="f-select" id="ef-cat-${id}"><option value="burger" ${p.cat==='burger'?'selected':''}>🍔 Burger</option><option value="combo" ${p.cat==='combo'?'selected':''}>🍟 Combo</option><option value="bebida" ${p.cat==='bebida'?'selected':''}>🥤 Bebida</option><option value="sobremesa" ${p.cat==='sobremesa'?'selected':''}>🍦 Sobremesa</option><option value="extra" ${p.cat==='extra'?'selected':''}>➕ Extra</option></select></div></div><div class="edit-form-row"><div><label class="f-label">Tag</label><select class="f-select" id="ef-tag-${id}"><option value="" ${!p.tag?'selected':''}>Nenhuma</option><option value="hit" ${p.tag==='hit'?'selected':''}>🔥 Hit</option><option value="novo" ${p.tag==='novo'?'selected':''}>✨ Novo</option><option value="smash" ${p.tag==='smash'?'selected':''}>Smash</option></select></div><div><label class="f-label">Em Destaque?</label><select class="f-select" id="ef-feat-${id}"><option value="0" ${!p.feat?'selected':''}>Não</option><option value="1" ${p.feat?'selected':''}>Sim</option></select></div></div><label class="f-label">Trocar foto (opcional)</label>${p.img?`<img src="${p.img}" class="edit-img-preview" id="ef-img-prev-${id}" style="display:block">`:`<img class="edit-img-preview" id="ef-img-prev-${id}">`}<div class="img-upload-area" id="ef-upload-area-${id}" style="margin-bottom:12px;"><input type="file" accept="image/*" id="ef-img-file-${id}" onchange="previewEditImg(${id})"><span>📷</span><p>Clique para trocar</p></div><div class="edit-actions"><button class="edit-save-btn" id="ef-save-${id}" onclick="saveEditProduct(${id})">💾 Salvar</button><button class="edit-cancel-btn" onclick="closeAllEditForms()">Cancelar</button></div></div>`;
   container.style.display='block';
 }
+async function saveEditProduct(id){
+  const name=document.getElementById('ef-name-'+id).value.trim(),descr=document.getElementById('ef-desc-'+id).value.trim(),price=parseFloat(document.getElementById('ef-price-'+id).value),cat=document.getElementById('ef-cat-'+id).value,tag=document.getElementById('ef-tag-'+id).value||null,feat=document.getElementById('ef-feat-'+id).value==='1';
+  if(!name||!descr||isNaN(price)){toast('❗ Preencha todos os campos!');return;}
+  const prevEl=document.getElementById('ef-img-prev-'+id),orig=PRODUCTS.find(x=>x.id===id);
+  let img=orig?orig.img:null;if(prevEl&&prevEl.src&&prevEl.src.startsWith('data:'))img=prevEl.src;
+  const btn=document.getElementById('ef-save-'+id);btn.disabled=true;btn.textContent='Salvando…';
+  const{error}=await sb.from('pb_products').update({name,descr,price,cat,tag,feat,img}).eq('id',id);
+  btn.disabled=false;btn.textContent='💾 Salvar';
+  if(error){toast('❌ Erro: '+error.message);return;}
+  closeAllEditForms();await reloadProducts();renderAdmProducts();renderProducts(curCat);toast('✅ Produto atualizado!');
+}
+function closeAllEditForms(){currentEditId=null;document.querySelectorAll('[id^="edit-form-"]').forEach(el=>{el.innerHTML='';el.style.display='none';});}
 
-async function saveEditProduct(id) {
-  const name  = document.getElementById('ef-name-'+id).value.trim();
-  const descr = document.getElementById('ef-desc-'+id).value.trim();
-  const price = parseFloat(document.getElementById('ef-price-'+id).value);
-  const cat   = document.getElementById('ef-cat-'+id).value;
-  const tag   = document.getElementById('ef-tag-'+id).value || null;
-  const feat  = document.getElementById('ef-feat-'+id).value === '1';
-
-  if (!name||!descr||isNaN(price)) { toast('❗ Preencha todos os campos!'); return; }
-
-  const prevEl = document.getElementById('ef-img-prev-'+id);
-  const orig   = PRODUCTS.find(x=>x.id===id);
-  let img = orig ? orig.img : null;
-  if (prevEl && prevEl.src && prevEl.src.startsWith('data:')) img = prevEl.src;
-
-  const btn = document.getElementById('ef-save-'+id);
-  btn.disabled=true; btn.textContent='Salvando…';
-
-  const { error } = await sb.from('pb_products').update({ name, descr, price, cat, tag, feat, img }).eq('id', id);
-  btn.disabled=false; btn.textContent='💾 Salvar';
-
-  if (error) { toast('❌ Erro: '+error.message); return; }
-
-  closeAllEditForms();
-  await reloadProducts();
-  renderAdmProducts();
-  renderProducts(curCat);
-  toast('✅ Produto atualizado!');
+function renderAdmProducts(){
+  const el=document.getElementById('prod-list-adm');
+  if(!PRODUCTS.length){el.innerHTML='<div style="color:var(--gray);font-size:13px;text-align:center;padding:20px;">Nenhum produto cadastrado.</div>';return;}
+  el.innerHTML=PRODUCTS.map(p=>`<div><div class="prod-adm-item"><div class="prod-adm-img">${p.img?`<img src="${p.img}" alt="${esc(p.name)}">`:'🍔'}</div><div class="prod-adm-info"><div class="prod-adm-name">${esc(p.name)}</div><div class="prod-adm-price">R$${fmtPrice(p.price)} · ${p.cat}${p.tag?' · '+p.tag:''}</div></div><div class="prod-adm-actions"><button class="prod-edit-btn" onclick="openEditForm(${p.id})">✏️</button><button class="prod-del-btn" onclick="deleteProduct(${p.id})">🗑</button></div></div><div id="edit-form-${p.id}" style="display:none;"></div></div>`).join('');
 }
 
-function closeAllEditForms() {
-  currentEditId = null;
-  document.querySelectorAll('[id^="edit-form-"]').forEach(el=>{ el.innerHTML=''; el.style.display='none'; });
+async function saveBanner(){
+  const title=document.getElementById('b-title').value.trim(),sub=document.getElementById('b-sub').value.trim(),badge=document.getElementById('b-badge').value.trim(),badge_type=document.getElementById('b-badge-type').value;
+  const prev=document.getElementById('b-img-preview'),img=prev.style.display!=='none'&&prev.src&&prev.src.startsWith('data:')?prev.src:null;
+  if(!title){toast('❗ Título obrigatório!');return;}
+  const btn=document.getElementById('save-banner-btn');btn.disabled=true;btn.textContent='Salvando…';
+  const{error}=await sb.from('pb_banners').insert({title,title_highlight:'',sub,badge,badge_type,img});
+  btn.disabled=false;btn.textContent='💾 Adicionar Banner';
+  if(error){toast('❌ Erro: '+error.message);return;}
+  ['b-title','b-sub','b-badge'].forEach(id=>document.getElementById(id).value='');prev.style.display='none';
+  document.getElementById('upload-area-banner').querySelector('span').style.display='';document.getElementById('upload-area-banner').querySelector('p').style.display='';
+  await reloadBanners();renderCarousel();renderAdmBanners();toast('✅ Banner adicionado!');
+}
+async function deleteBanner(id){
+  if(!confirm('Excluir este banner?'))return;
+  const{error}=await sb.from('pb_banners').delete().eq('id',id);
+  if(error){toast('❌ Erro: '+error.message);return;}
+  await reloadBanners();renderCarousel();renderAdmBanners();toast('🗑 Banner excluído.');
+}
+function renderAdmBanners(){
+  const el=document.getElementById('banner-adm-list');
+  el.innerHTML=BANNERS.map(b=>`<div class="banner-adm-item"><div class="banner-adm-color" style="background:${b.badge_type==='green'?'#4caf7d':b.badge_type==='red'?'#ff5252':'#f5a623'};"></div><div class="banner-adm-info"><div class="banner-adm-title">${esc(b.title)}</div><div class="banner-adm-sub">${esc(b.sub||'Sem subtítulo')}</div></div><button class="prod-del-btn" onclick="deleteBanner(${b.id})">🗑</button></div>`).join('');
 }
 
-// =====================================================
-// RENDER ADMIN PRODUCTS LIST
-// =====================================================
-function renderAdmProducts() {
-  const el = document.getElementById('prod-list-adm');
-  if (!PRODUCTS.length) {
-    el.innerHTML='<div style="color:var(--gray);font-size:13px;text-align:center;padding:20px;">Nenhum produto cadastrado.</div>';
-    return;
-  }
-  el.innerHTML = PRODUCTS.map(p=>`
-    <div>
-      <div class="prod-adm-item">
-        <div class="prod-adm-img">${p.img?`<img src="${p.img}" alt="${esc(p.name)}">`:'🍔'}</div>
-        <div class="prod-adm-info">
-          <div class="prod-adm-name">${esc(p.name)}</div>
-          <div class="prod-adm-price">R$${fmtPrice(p.price)} · ${p.cat}${p.tag?' · '+p.tag:''}</div>
-        </div>
-        <div class="prod-adm-actions">
-          <button class="prod-edit-btn" onclick="openEditForm(${p.id})" title="Editar">✏️</button>
-          <button class="prod-del-btn"  onclick="deleteProduct(${p.id})" title="Excluir">🗑</button>
-        </div>
-      </div>
-      <div id="edit-form-${p.id}" style="display:none;"></div>
-    </div>`).join('');
+function loadConfigForm(){document.getElementById('cfg-wa').value=CONFIG.wa||'';document.getElementById('cfg-addr').value=CONFIG.addr||'';document.getElementById('cfg-map').value=CONFIG.map||'';document.getElementById('cfg-pw').value='';}
+async function saveConfig(){
+  const wa=document.getElementById('cfg-wa').value.trim()||CONFIG.wa,addr=document.getElementById('cfg-addr').value.trim()||CONFIG.addr,map=document.getElementById('cfg-map').value.trim()||CONFIG.map,pw=document.getElementById('cfg-pw').value||CONFIG.pw;
+  const btn=document.getElementById('save-cfg-btn');btn.disabled=true;btn.textContent='Salvando…';
+  const{error}=await sb.from('pb_config').upsert({id:1,wa,addr,map,pw});
+  btn.disabled=false;btn.textContent='💾 Salvar Configurações';
+  if(error){toast('❌ Erro: '+error.message);return;}
+  CONFIG={id:1,wa,addr,map,pw};document.getElementById('loc-address').textContent=addr;if(map)document.getElementById('map-iframe').src=map;toast('✅ Configurações salvas!');
 }
 
-// =====================================================
-// BANNERS ADMIN
-// =====================================================
-async function saveBanner() {
-  const title           = document.getElementById('b-title').value.trim();
-  const sub             = document.getElementById('b-sub').value.trim();
-  const badge           = document.getElementById('b-badge').value.trim();
-  const badge_type      = document.getElementById('b-badge-type').value;
-  const prev            = document.getElementById('b-img-preview');
-  const img             = prev.style.display!=='none' && prev.src && prev.src.startsWith('data:') ? prev.src : null;
+function toast(msg,dur=2800){const el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>{el.style.display='none';},dur);}
 
-  if (!title) { toast('❗ Título obrigatório!'); return; }
-
-  const btn = document.getElementById('save-banner-btn');
-  btn.disabled=true; btn.textContent='Salvando…';
-
-  const { error } = await sb.from('pb_banners').insert({ title, title_highlight:'', sub, badge, badge_type, img });
-  btn.disabled=false; btn.textContent='💾 Adicionar Banner';
-
-  if (error) { toast('❌ Erro: '+error.message); return; }
-
-  ['b-title','b-sub','b-badge'].forEach(id=>document.getElementById(id).value='');
-  prev.style.display='none';
-  document.getElementById('upload-area-banner').querySelector('span').style.display='';
-  document.getElementById('upload-area-banner').querySelector('p').style.display='';
-
-  await reloadBanners();
-  renderCarousel();
-  renderAdmBanners();
-  toast('✅ Banner adicionado!');
-}
-
-async function deleteBanner(id) {
-  if (!confirm('Excluir este banner?')) return;
-  const { error } = await sb.from('pb_banners').delete().eq('id', id);
-  if (error) { toast('❌ Erro: '+error.message); return; }
-  await reloadBanners();
-  renderCarousel();
-  renderAdmBanners();
-  toast('🗑 Banner excluído.');
-}
-
-function renderAdmBanners() {
-  const el = document.getElementById('banner-adm-list');
-  el.innerHTML = BANNERS.map(b=>`
-    <div class="banner-adm-item">
-      <div class="banner-adm-color" style="background:${b.badge_type==='green'?'#4caf7d':b.badge_type==='red'?'#ff5252':'#f5a623'};"></div>
-      <div class="banner-adm-info">
-        <div class="banner-adm-title">${esc(b.title)}</div>
-        <div class="banner-adm-sub">${esc(b.sub||'Sem subtítulo')}</div>
-      </div>
-      <button class="prod-del-btn" onclick="deleteBanner(${b.id})">🗑</button>
-    </div>`).join('');
-}
-
-// =====================================================
-// CONFIG
-// =====================================================
-function loadConfigForm() {
-  document.getElementById('cfg-wa').value   = CONFIG.wa   || '';
-  document.getElementById('cfg-addr').value = CONFIG.addr || '';
-  document.getElementById('cfg-map').value  = CONFIG.map  || '';
-  document.getElementById('cfg-pw').value   = '';
-}
-
-async function saveConfig() {
-  const wa   = document.getElementById('cfg-wa').value.trim()   || CONFIG.wa;
-  const addr = document.getElementById('cfg-addr').value.trim() || CONFIG.addr;
-  const map  = document.getElementById('cfg-map').value.trim()  || CONFIG.map;
-  const pw   = document.getElementById('cfg-pw').value          || CONFIG.pw;
-
-  const btn = document.getElementById('save-cfg-btn');
-  btn.disabled=true; btn.textContent='Salvando…';
-
-  const { error } = await sb.from('pb_config').upsert({ id:1, wa, addr, map, pw });
-  btn.disabled=false; btn.textContent='💾 Salvar Configurações';
-
-  if (error) { toast('❌ Erro: '+error.message); return; }
-
-  CONFIG = { id:1, wa, addr, map, pw };
-  document.getElementById('loc-address').textContent = addr;
-  if (map) document.getElementById('map-iframe').src = map;
-  toast('✅ Configurações salvas!');
-}
-
-// =====================================================
-// TOAST
-// =====================================================
-function toast(msg, dur=2800) {
-  const el = document.getElementById('toast');
-  el.textContent=msg; el.style.display='block';
-  clearTimeout(el._t);
-  el._t = setTimeout(()=>{ el.style.display='none'; }, dur);
-}
-
-// =====================================================
-// INIT
-// =====================================================
-(async function init() {
-  const ok = await initDB();
-
-  // Apply config to UI
-  document.getElementById('loc-address').textContent = CONFIG.addr || 'Goiânia, Goiás — Brasil';
-  if (CONFIG.map) document.getElementById('map-iframe').src = CONFIG.map;
-
-  renderCarousel();
-  renderProducts();
-
-  // Dismiss loading screen
-  const ls = document.getElementById('loading-screen');
-  ls.classList.add('fade');
-  setTimeout(()=>ls.style.display='none', 500);
-
-  if (!ok) toast('⚠️ Banco offline — exibindo dados padrão');
+(async function init(){
+  const ok=await initDB();
+  document.getElementById('loc-address').textContent=CONFIG.addr||'Goiânia, Goiás — Brasil';
+  if(CONFIG.map)document.getElementById('map-iframe').src=CONFIG.map;
+  renderCarousel();renderProducts();
+  const ls=document.getElementById('loading-screen');ls.classList.add('fade');setTimeout(()=>ls.style.display='none',500);
+  if(!ok)toast('⚠️ Banco offline — exibindo dados padrão');
 })();
 </script>
 </body>
