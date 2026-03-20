@@ -68,11 +68,7 @@ header{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1p
 .slide-title span{color:var(--gold);}
 .slide-sub{color:var(--gray2);font-size:11px;margin-top:4px;font-weight:600;}
 
-/* ── CORREÇÃO VERMELHO: emoji sempre fixo, sem imagem ── */
-.slide-product-img{width:120px;flex-shrink:0;filter:drop-shadow(0 -6px 18px rgba(245,166,35,.35));}
-@media(min-width:600px){.slide-product-img{width:160px;}}
-.slide-emoji{font-size:80px;display:block;text-align:center;animation:float 3s ease-in-out infinite;}
-@keyframes float{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(-5deg) translateY(-7px)}}
+
 
 .carousel-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3;}
 .cdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;}
@@ -500,7 +496,7 @@ function renderCarousel(){
           <div class="slide-title">${b.title_highlight?`<span>${b.title_highlight}</span>${b.title.replace(b.title_highlight,'')}`:b.title}</div>
           <div class="slide-sub">${b.sub||''}</div>
         </div>
-        <div class="slide-product-img"><span class="slide-emoji">🍔</span></div>
+        <div class="slide-product-img"><span class="slide-emoji"></span></div>
       </div>
     </div>`).join('');
   dots.innerHTML=BANNERS.map((_,i)=>`<div class="cdot ${i===0?'active':''}" onclick="goSlide(${i})"></div>`).join('');
