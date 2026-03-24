@@ -1585,14 +1585,14 @@
 
     .card-flip-container {
       perspective: 1000px;
-      width: 340px;
-      height: 200px;
+      width: 272px;
+      height: 160px;
       margin: 20px auto;
     }
 
     .card-flip-inner {
       position: relative;
-      width: 100%;
+      width: 95%;
       height: 100%;
       transition: transform .6s;
       transform-style: preserve-3d;
@@ -1650,12 +1650,14 @@
       font-size: 9px;
       color: rgba(255, 255, 255, .5);
       text-transform: uppercase;
+      transform: translateY(-20px);
     }
 
     .card-value {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 300;
       color: var(--white);
+      transform: translateY(-20px);
     }
 
     .magnetic-stripe {
@@ -1674,6 +1676,7 @@
       color: #333;
       font-size: 16px;
       letter-spacing: 4px;
+      transform: translateY(-10px);
     }
 
     .success-checkmark {
@@ -2511,21 +2514,35 @@
   </div>
 
   <header>
-    <div class="header-inner">
-      <div class="logo-wrap">
-        <div class="logo-icon">
-          <img src="Logo.png" alt="Logo">
-        </div>
-        <div class="logo-text">
-          <h1>PIBURGUER</h1><span>Sabor Infinito</span>
-        </div>
+  <div class="header-inner">
+    
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <img src="Logo.png" alt="Logo">
       </div>
-      <div class="header-search">
-        <span class="search-ic">🔍</span>
-        <input type="text" placeholder="Buscar no cardápio…" oninput="filterMenu(this.value)" id="search-input">
+      <div class="logo-text">
+        <h1>PIBURGUER</h1>
+        <span>Sabor Infinito</span>
       </div>
     </div>
-  </header>
+
+    <div class="header-search">
+      <span class="search-ic">🔍</span>
+      <input 
+        type="text" 
+        placeholder="Buscar no cardápio…" 
+        oninput="filterMenu(this.value)" 
+        id="search-input"
+      >
+    </div>
+
+    <!-- BOTÃO CENTRAL -->
+    <a href="pi-burguer-central.html" class="btn-central">
+      Central
+    </a>
+
+  </div>
+</header>
 
   <div style="max-width:900px;margin:0 auto;">
     <div class="info-bar">
