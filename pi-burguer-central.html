@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <!-- esse é o pi-burguer-central.html, a central de pedidos da pi-burgueria -->
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>π Burguer — Central de Pedidos</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0d1b3e;--navy2:#131f45;--navy3:#1a2a55;--navy4:#1e3060;
+  --gold:#f5a623;--gold2:#ffc94a;--gold3:#d48c10;
+  --white:#ffffff;--gray:#8a9bc0;--gray2:#c5d0e8;
+  --green:#4caf7d;--red:#ff5252;--red2:#cc3333;
+}
+html,body{height:100%;background:var(--navy);color:var(--white);font-family:'Nunito',sans-serif;overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--navy2);}
+::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:3px;}
+
+/* LOADING */
+#loading-screen{position:fixed;inset:0;background:var(--navy);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .5s;}
+#loading-screen.fade-out{opacity:0;pointer-events:none;}
+.loading-logo{font-family:'Bebas Neue',cursive;font-size:72px;color:var(--gold);animation:pulse 1.5s ease-in-out infinite;text-shadow:0 0 40px rgba(245,166,35,.5);}
+.loading-bar-wrap{width:220px;height:4px;background:var(--navy3);border-radius:2px;overflow:hidden;}
+.loading-bar{height:100%;background:linear-gradient(90deg,var(--gold3),var(--gold2));width:0;animation:loadbar 2s ease forwards;}
+.loading-text{color:var(--gray);font-size:14px;letter-spacing:1px;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.7;transform:scale(.97);}}
+@keyframes loadbar{0%{width:0;}60%{width:80%;}100%{width:100%;}}
+
+/* HEADER */
+#app-header{background:linear-gradient(135deg,var(--navy2),var(--navy3));border-bottom:1px solid rgba(245,166,35,.2);padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-logo{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);letter-spacing:2px;cursor:pointer;}
+.header-title{font-size:13px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;}
+#btn-back{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);color:var(--gold);padding:7px 16px;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;display:none;transition:all .2s;}
+#btn-back:hover{background:rgba(245,166,35,.2);}
+
+/* MAIN */
+#main-content{min-height:calc(100vh - 60px);padding:24px 16px;max-width:1200px;margin:0 auto;}
+
+/* PORTAL SELECTOR */
+#portal-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:700px;margin:0 auto;padding-top:20px;}
+.portal-hero{text-align:center;margin-bottom:36px;}
+.portal-hero h1{font-family:'Bebas Neue',cursive;font-size:42px;color:var(--gold);letter-spacing:3px;}
+.portal-hero p{color:var(--gray);font-size:15px;margin-top:6px;}
+.portal-card{background:var(--navy2);border:1px solid rgba(245,166,35,.15);border-radius:20px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.portal-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,166,35,.05),transparent);opacity:0;transition:opacity .3s;}
+.portal-card:hover{border-color:rgba(245,166,35,.5);transform:translateY(-3px);box-shadow:0 12px 40px rgba(245,166,35,.12);}
+.portal-card:hover::before{opacity:1;}
+.portal-icon{font-size:48px;margin-bottom:14px;display:block;}
+.portal-card h3{font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);letter-spacing:1px;margin-bottom:6px;}
+.portal-card p{color:var(--gray);font-size:13px;line-height:1.5;}
+
+/* COMMON COMPONENTS */
+.section-title{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);letter-spacing:2px;margin-bottom:20px;}
+.card{background:var(--navy2);border:1px solid rgba(245,166,35,.15);border-radius:16px;padding:20px;}
+.card-sm{background:var(--navy2);border:1px solid rgba(245,166,35,.15);border-radius:12px;padding:14px;}
+input,select,textarea{background:var(--navy3);border:1.5px solid rgba(245,166,35,.2);border-radius:10px;padding:10px 13px;color:var(--white);outline:none;width:100%;font-family:'Nunito',sans-serif;font-size:14px;transition:border-color .2s;}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+input::placeholder,textarea::placeholder{color:var(--gray);}
+select option{background:var(--navy3);}
+label{font-size:13px;color:var(--gray2);margin-bottom:5px;display:block;font-weight:600;}
+.form-group{margin-bottom:14px;}
+.btn{background:var(--gold);color:var(--navy);font-family:'Nunito',sans-serif;font-weight:900;border-radius:12px;border:none;padding:12px 24px;cursor:pointer;font-size:15px;transition:all .2s;width:100%;}
+.btn:hover{background:var(--gold2);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-outline{background:transparent;border:1.5px solid var(--gold);color:var(--gold);font-family:'Nunito',sans-serif;font-weight:700;border-radius:12px;padding:10px 20px;cursor:pointer;font-size:14px;transition:all .2s;}
+.btn-outline:hover{background:rgba(245,166,35,.1);}
+.btn-danger{background:var(--red);color:var(--white);}
+.btn-danger:hover{background:var(--red2);}
+.btn-green{background:var(--green);color:var(--white);}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:8px;}
+.row{display:flex;gap:14px;}
+.row>*{flex:1;}
+.divider{height:1px;background:rgba(245,166,35,.1);margin:16px 0;}
+.text-gold{color:var(--gold);}
+.text-green{color:var(--green);}
+.text-red{color:var(--red);}
+.text-gray{color:var(--gray);}
+.bold{font-weight:700;}
+.mt-8{margin-top:8px;}
+.mt-16{margin-top:16px;}
+.mt-20{margin-top:20px;}
+.flex{display:flex;align-items:center;}
+.flex-between{display:flex;align-items:center;justify-content:space-between;}
+.gap-8{gap:8px;}
+.gap-12{gap:12px;}
+
+/* STATUS BADGES */
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;}
+.badge-received{background:rgba(245,166,35,.15);color:#f5a623;}
+.badge-preparing{background:rgba(255,140,0,.15);color:#ff8c00;}
+.badge-on_the_way{background:rgba(100,149,237,.15);color:#6495ed;}
+.badge-delivered{background:rgba(76,175,125,.15);color:#4caf7d;}
+.badge-cancelled{background:rgba(255,82,82,.15);color:#ff5252;}
+.badge-confirmed{background:rgba(76,175,125,.15);color:#4caf7d;}
+.badge-pending{background:rgba(245,166,35,.15);color:#f5a623;}
+.badge-failed{background:rgba(255,82,82,.15);color:#ff5252;}
+.badge-available{background:rgba(76,175,125,.15);color:#4caf7d;}
+.badge-busy{background:rgba(255,140,0,.15);color:#ff8c00;}
+.badge-offline{background:rgba(138,155,192,.15);color:#8a9bc0;}
+
+/* TOAST */
+#toast-container{position:fixed;bottom:24px;right:24px;z-index:9998;display:flex;flex-direction:column;gap:10px;max-width:320px;}
+.toast{padding:13px 18px;border-radius:12px;font-size:14px;font-weight:600;animation:toastIn .3s ease;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.toast-success{background:#1a2a55;border-left:3px solid var(--gold);color:var(--gold2);}
+.toast-error{background:#2a1515;border-left:3px solid var(--red);color:#ff8080;}
+.toast-info{background:#131f45;border-left:3px solid #6495ed;color:#90b0ff;}
+.toast-warning{background:#2a1d10;border-left:3px solid #ff8c00;color:#ffb060;}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* FADE */
+.portal-view{display:none;animation:fadeIn .3s ease;}
+.portal-view.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* PORTAL 1 — CLIENTE */
+.track-hero{text-align:center;padding:30px 0 20px;}
+.track-hero .big-logo{font-family:'Bebas Neue',cursive;font-size:54px;color:var(--gold);line-height:1;}
+.track-search-box{max-width:460px;margin:0 auto;padding:0 16px;}
+.track-input-wrap{position:relative;}
+.track-input-wrap input{font-size:18px;padding:14px 16px;text-align:center;letter-spacing:2px;}
+.timeline-container{max-width:600px;margin:0 auto;}
+.order-header{background:var(--navy2);border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:22px;margin-bottom:20px;}
+.order-number-big{font-family:'Bebas Neue',cursive;font-size:48px;color:var(--gold);}
+.timeline{display:flex;align-items:center;margin:28px 0;position:relative;}
+.timeline-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;}
+.timeline-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid;transition:all .4s;}
+.timeline-icon.done{background:rgba(76,175,125,.15);border-color:var(--green);}
+.timeline-icon.active{background:rgba(245,166,35,.15);border-color:var(--gold);animation:pulseBorder 2s infinite;}
+.timeline-icon.pending{background:rgba(138,155,192,.1);border-color:rgba(138,155,192,.3);}
+.timeline-label{font-size:11px;font-weight:700;text-align:center;color:var(--gray);}
+.timeline-label.active{color:var(--gold);}
+.timeline-label.done{color:var(--green);}
+.timeline-line{position:absolute;top:26px;left:50%;right:-50%;height:2px;z-index:0;}
+.timeline-line.done{background:var(--green);}
+.timeline-line.pending{background:rgba(138,155,192,.2);border-top:2px dashed rgba(138,155,192,.2);height:0;}
+@keyframes pulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.4);}50%{box-shadow:0 0 0 8px rgba(245,166,35,0);}}
+.deliverer-card{background:var(--navy3);border:1px solid rgba(100,149,237,.3);border-radius:14px;padding:16px;margin-top:16px;display:flex;gap:14px;align-items:center;}
+.deliverer-avatar{width:50px;height:50px;border-radius:50%;background:var(--gold3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:24px;color:var(--navy);flex-shrink:0;}
+.sync-indicator{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray);margin-top:12px;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:syncPulse 2s infinite;}
+@keyframes syncPulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* PORTAL 2 — PAGAMENTO */
+.payment-tabs{display:flex;gap:0;border-bottom:1px solid rgba(245,166,35,.2);margin-bottom:24px;}
+.payment-tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-weight:700;font-size:14px;color:var(--gray);border-bottom:2px solid transparent;transition:all .2s;}
+.payment-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.pix-container{text-align:center;}
+.pix-qr{display:inline-block;background:white;padding:12px;border-radius:12px;margin:20px auto;}
+.pix-key-box{background:var(--navy3);border:1px solid rgba(245,166,35,.3);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin:12px 0;}
+.countdown{font-family:'Bebas Neue',cursive;font-size:42px;color:var(--gold);}
+.countdown.urgent{color:var(--red);animation:urgentBlink 1s infinite;}
+@keyframes urgentBlink{0%,100%{opacity:1;}50%{opacity:.5;}}
+.progress-bar{height:5px;background:var(--navy3);border-radius:3px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold3),var(--gold2));transition:width 1s linear;}
+
+/* CARD 3D */
+.card-flip-container{perspective:1000px;width:340px;height:200px;margin:20px auto;}
+.card-flip-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d;}
+.card-flip-inner.flipped{transform:rotateY(180deg);}
+.card-face,.card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;padding:20px;}
+.card-face{background:linear-gradient(135deg,#0d1b3e,#1e3060,#0d1b3e);border:1px solid rgba(245,166,35,.4);box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.card-back{background:linear-gradient(135deg,#1a2a55,#131f45);border:1px solid rgba(245,166,35,.4);transform:rotateY(180deg);}
+.card-chip{width:40px;height:30px;background:linear-gradient(135deg,#d4a84b,#f5e07a);border-radius:5px;margin-bottom:16px;}
+.card-number-display{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:4px;color:rgba(255,255,255,.85);margin-bottom:16px;}
+.card-bottom{display:flex;justify-content:space-between;align-items:flex-end;}
+.card-label{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;}
+.card-value{font-size:14px;font-weight:700;color:var(--white);}
+.card-brand{font-size:28px;}
+.magnetic-stripe{background:#1a1a1a;height:40px;margin:20px -20px;margin-top:30px;}
+.cvv-box{background:white;border-radius:4px;padding:6px 12px;margin:16px 0;text-align:right;color:#333;font-size:16px;letter-spacing:4px;}
+
+/* CHECKMARK ANIM */
+.success-checkmark{width:80px;height:80px;margin:0 auto 20px;}
+.success-checkmark svg{width:80px;height:80px;}
+.check-circle{stroke:var(--green);stroke-width:3;fill:none;stroke-dasharray:166;stroke-dashoffset:166;animation:stroke .6s ease forwards;}
+.check-mark{stroke:var(--green);stroke-width:4;fill:none;stroke-dasharray:48;stroke-dashoffset:48;animation:stroke .4s .6s ease forwards;}
+@keyframes stroke{100%{stroke-dashoffset:0;}}
+
+/* PORTAL 3 — ENTREGADOR */
+.deliverer-status-toggle{display:flex;align-items:center;justify-content:space-between;background:var(--navy3);border-radius:14px;padding:16px 20px;}
+.toggle-switch{position:relative;width:64px;height:32px;cursor:pointer;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:rgba(138,155,192,.3);border-radius:16px;transition:.3s;}
+.toggle-slider:before{content:'';position:absolute;height:24px;width:24px;left:4px;bottom:4px;background:var(--gray);border-radius:50%;transition:.3s;}
+input:checked+.toggle-slider{background:rgba(76,175,125,.3);}
+input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--green);}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--navy3);border-radius:12px;padding:14px;text-align:center;}
+.stat-number{font-family:'Bebas Neue',cursive;font-size:32px;color:var(--gold);}
+.stat-label{font-size:12px;color:var(--gray);}
+
+/* PORTAL 4 — LOJA */
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.metric-card{background:var(--navy2);border:1px solid rgba(245,166,35,.15);border-radius:14px;padding:18px;text-align:center;}
+.metric-value{font-family:'Bebas Neue',cursive;font-size:36px;color:var(--gold);}
+.metric-label{font-size:12px;color:var(--gray);margin-top:4px;}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start;}
+.kanban-col{background:var(--navy2);border-radius:16px;padding:14px;}
+.kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.kanban-col-title{font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:1px;}
+.kanban-count{background:rgba(245,166,35,.2);color:var(--gold);font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.order-card{background:var(--navy3);border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid rgba(245,166,35,.1);transition:all .2s;}
+.order-card:hover{border-color:rgba(245,166,35,.3);}
+.order-card-num{font-family:'Bebas Neue',cursive;font-size:20px;color:var(--gold);}
+.order-timer{font-size:11px;padding:3px 8px;border-radius:6px;}
+.order-timer.ok{background:rgba(76,175,125,.15);color:#4caf7d;}
+.order-timer.warn{background:rgba(255,82,82,.15);color:#ff5252;}
+.order-items-preview{font-size:12px;color:var(--gray);margin:6px 0;}
+.loja-tabs{display:flex;gap:0;border-bottom:1px solid rgba(245,166,35,.2);margin-bottom:24px;overflow-x:auto;}
+.loja-tab{padding:12px 20px;cursor:pointer;font-weight:700;font-size:14px;color:var(--gray);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.loja-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.new-order-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:white;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+/* QTY CONTROL */
+.qty-control{display:flex;align-items:center;gap:8px;}
+.qty-btn{width:28px;height:28px;border-radius:8px;border:1px solid rgba(245,166,35,.3);background:transparent;color:var(--gold);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.qty-btn:hover{background:rgba(245,166,35,.1);}
+.qty-val{min-width:24px;text-align:center;font-weight:700;}
+
+/* PRODUCT SEARCH */
+.product-search-results{background:var(--navy3);border:1px solid rgba(245,166,35,.2);border-radius:10px;margin-top:6px;max-height:200px;overflow-y:auto;}
+.product-result-item{padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;font-size:14px;border-bottom:1px solid rgba(245,166,35,.08);}
+.product-result-item:hover{background:rgba(245,166,35,.05);}
+
+/* ORDER ITEMS LIST */
+.items-list{margin:12px 0;}
+.item-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(245,166,35,.08);}
+.item-name{font-size:14px;font-weight:600;}
+.item-qty{font-size:13px;color:var(--gray);}
+.item-price{font-size:14px;color:var(--gold);font-weight:700;}
+
+/* TOTALS */
+.totals-box{background:var(--navy3);border-radius:12px;padding:14px;margin-top:14px;}
+.total-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;}
+.total-row.grand{font-size:18px;font-weight:900;color:var(--gold);padding-top:8px;border-top:1px solid rgba(245,166,35,.2);}
+
+/* GRAPH */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:140px;padding:10px 0;}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar{background:linear-gradient(180deg,var(--gold2),var(--gold3));border-radius:4px 4px 0 0;transition:height .5s ease;min-height:4px;}
+.bar-label{font-size:10px;color:var(--gray);}
+.bar-value{font-size:10px;color:var(--gold);font-weight:700;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-sheet{background:var(--navy2);border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:sheetUp .3s ease;}
+@keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px;}
+
+/* SETUP PANEL */
+.setup-panel{text-align:center;padding:40px 20px;max-width:600px;margin:0 auto;}
+.setup-panel pre{text-align:left;background:var(--navy3);border-radius:10px;padding:16px;font-size:11px;overflow-x:auto;color:var(--gray2);margin:16px 0;border:1px solid rgba(245,166,35,.2);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .metrics-grid{grid-template-columns:repeat(2,1fr);}
+  .kanban{grid-template-columns:1fr;}
+  .card-flip-container{width:100%;max-width:340px;}
+}
+@media(max-width:480px){
+  #portal-selector{grid-template-columns:1fr;}
+  .row{flex-direction:column;}
+  .metrics-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* LOGIN SCREEN */
+.login-box{max-width:380px;margin:40px auto;background:var(--navy2);border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:32px;}
+.login-logo{font-family:'Bebas Neue',cursive;font-size:42px;color:var(--gold);text-align:center;margin-bottom:6px;}
+.login-sub{color:var(--gray);text-align:center;font-size:14px;margin-bottom:24px;}
+
+/* DELIVERER ORDERS */
+.available-orders{margin-top:20px;}
+.available-order-card{background:var(--navy3);border:1px solid rgba(245,166,35,.15);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+
+/* HISTORY LIST */
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(245,166,35,.08);font-size:14px;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loading-logo">π</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+  <div class="loading-text">Conectando ao sistema…</div>
+</div>
+
+<!-- HEADER -->
+<div id="app-header">
+  <div class="header-logo" onclick="goHome()">π BURGUER</div>
+  <div class="header-title">Central de Pedidos</div>
+  <button id="btn-back" onclick="goHome()">← Voltar</button>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+
+  <!-- PORTAL SELECTOR -->
+  <div id="portal-selector" class="portal-view active">
+    <div class="portal-hero" style="grid-column:1/-1;">
+      <h1>π BURGUER</h1>
+      <p>Central de Pedidos — Selecione seu portal</p>
+    </div>
+    <div class="portal-card" onclick="showView('portal-cliente')">
+      <span class="portal-icon">📦</span>
+      <h3>Acompanhar Pedido</h3>
+      <p>Rastreie seu pedido em tempo real com timeline animada</p>
+    </div>
+    <div class="portal-card" onclick="showView('portal-pagamento')">
+      <span class="portal-icon">💳</span>
+      <h3>Pagamento Online</h3>
+      <p>PIX, cartão de crédito ou débito de forma segura</p>
+    </div>
+    <div class="portal-card" onclick="showView('portal-entregador')">
+      <span class="portal-icon">🏍️</span>
+      <h3>Portal Entregador</h3>
+      <p>Acesse pedidos disponíveis e gerencie entregas</p>
+    </div>
+    <div class="portal-card" onclick="showView('portal-loja')">
+      <span class="portal-icon">🏪</span>
+      <h3>Painel da Loja</h3>
+      <p>Gestão completa de pedidos, fila e relatórios</p>
+    </div>
+    <div class="portal-card" onclick="openCardapioAdmin()">
+      <span class="portal-icon">&#9881;</span>
+      <h3>Admin do Cardápio</h3>
+      <p>Gerencie produtos, banners e configurações do cardápio</p>
+    </div>
+  </div>
+
+  <!-- PORTAL 1 — CLIENTE -->
+  <div id="portal-cliente" class="portal-view">
+    <div id="cliente-busca">
+      <div class="track-hero">
+        <div class="big-logo">π</div>
+        <div class="section-title">Rastrear Pedido</div>
+        <p class="text-gray" style="font-size:14px;">Acompanhe seu pedido em tempo real</p>
+      </div>
+      <div class="track-search-box">
+        <div class="form-group">
+          <div class="track-input-wrap">
+            <input type="text" id="track-input" placeholder="#0001" style="text-align:center;font-size:20px;letter-spacing:3px;" maxlength="10">
+          </div>
+        </div>
+        <button class="btn" onclick="buscarPedido()">🔍 Rastrear Pedido</button>
+        <div class="divider"></div>
+        <p class="text-gray" style="text-align:center;font-size:13px;margin-bottom:12px;">Ou acesse com seu telefone</p>
+        <div class="form-group">
+          <input type="text" id="cliente-phone-login" placeholder="(99) 9 9999-9999" oninput="maskPhone(this)">
+        </div>
+        <button class="btn btn-outline" onclick="loginClienteByPhone()">Ver meus pedidos</button>
+        <div style="text-align:center;margin-top:14px;">
+          <span class="text-gray" style="font-size:13px;">Não tem conta? </span>
+          <span class="text-gold" style="cursor:pointer;font-size:13px;font-weight:700;" onclick="showClienteModal()">Criar conta</span>
+        </div>
+      </div>
+    </div>
+    <div id="cliente-timeline" style="display:none;">
+      <div class="timeline-container" id="timeline-content"></div>
+    </div>
+    <div id="cliente-meus-pedidos" style="display:none;">
+      <div class="section-title">Meus Pedidos</div>
+      <div id="meus-pedidos-list"></div>
+    </div>
+  </div>
+
+  <!-- PORTAL 2 — PAGAMENTO -->
+  <div id="portal-pagamento" class="portal-view">
+    <div class="section-title">Pagamento Online</div>
+    <div id="pay-busca" class="card" style="max-width:500px;margin:0 auto;">
+      <div class="form-group">
+        <label>Número do Pedido</label>
+        <input type="text" id="pay-order-input" placeholder="#0001" style="letter-spacing:2px;" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <button class="btn" onclick="buscarPedidoPagamento()">Buscar Pedido</button>
+    </div>
+    <div id="pay-checkout" style="display:none;max-width:500px;margin:20px auto;">
+      <div class="card" id="pay-order-summary"></div>
+      <div class="card mt-16">
+        <div class="payment-tabs">
+          <div class="payment-tab active" onclick="showPayTab('pix')">PIX</div>
+          <div class="payment-tab" onclick="showPayTab('credit')">Crédito/Débito</div>
+          <div class="payment-tab" onclick="showPayTab('cash')">Dinheiro</div>
+        </div>
+        <div id="pay-tab-pix">
+          <div class="pix-container">
+            <p class="text-gray" style="font-size:13px;">Escaneie o QR Code ou copie a chave PIX</p>
+            <div class="pix-qr">
+              <svg id="pix-qr-svg" width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"></svg>
+            </div>
+            <div class="pix-key-box">
+              <span style="font-size:14px;font-weight:700;">piburguer@pix.com</span>
+              <button class="btn-outline btn-sm" onclick="copyPix()">Copiar</button>
+            </div>
+            <div class="countdown" id="pix-countdown">05:00</div>
+            <div class="progress-bar"><div class="progress-fill" id="pix-progress" style="width:100%"></div></div>
+            <p class="text-gray" style="font-size:12px;margin-bottom:16px;">Aguardando pagamento</p>
+            <button class="btn" id="btn-confirmar-pix" onclick="confirmarPix()">✅ Já realizei o pagamento</button>
+            <button class="btn btn-outline mt-8" id="btn-novo-pix" style="display:none;" onclick="reinitPix()">Gerar novo PIX</button>
+          </div>
+        </div>
+        <div id="pay-tab-credit" style="display:none;">
+          <div class="card-flip-container">
+            <div class="card-flip-inner" id="card-flip">
+              <div class="card-face">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div class="card-chip"></div>
+                  <div id="card-brand-front" style="font-size:28px;"></div>
+                </div>
+                <div class="card-number-display" id="card-num-display">#### #### #### ####</div>
+                <div class="card-bottom">
+                  <div><div class="card-label">Nome</div><div class="card-value" id="card-name-display" style="font-size:12px;text-transform:uppercase;">SEU NOME</div></div>
+                  <div><div class="card-label">Validade</div><div class="card-value" id="card-exp-display">MM/AA</div></div>
+                </div>
+              </div>
+              <div class="card-back">
+                <div class="magnetic-stripe"></div>
+                <div style="padding:0 10px;">
+                  <div class="card-label" style="text-align:right;">CVV</div>
+                  <div class="cvv-box" id="cvv-display">***</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-16">
+            <label>Número do Cartão</label>
+            <input type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNum(this)" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Nome no Cartão</label>
+            <input type="text" id="card-name" placeholder="NOME COMPLETO" oninput="this.value=this.value.toUpperCase();document.getElementById('card-name-display').textContent=this.value||'SEU NOME'">
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label>Validade</label>
+              <input type="text" id="card-exp" placeholder="MM/AA" maxlength="5" oninput="formatExp(this)">
+            </div>
+            <div class="form-group">
+              <label>CVV</label>
+              <input type="text" id="card-cvv" placeholder="***" maxlength="4" onfocus="flipCard(true)" onblur="flipCard(false)" oninput="document.getElementById('cvv-display').textContent=this.value||'***'">
+            </div>
+          </div>
+          <button class="btn" onclick="processarCartao()">Pagar com Cartão</button>
+        </div>
+        <div id="pay-tab-cash" style="display:none;">
+          <div class="form-group" style="margin-top:12px;">
+            <label>Forma</label>
+            <select id="cash-type">
+              <option value="cash">Dinheiro na entrega</option>
+              <option value="pickup">Retirar no local</option>
+            </select>
+          </div>
+          <div class="form-group" id="troco-group">
+            <label>Precisa de troco?</label>
+            <div class="flex gap-8" style="margin-bottom:8px;">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--white);">
+                <input type="radio" name="troco" value="nao" checked style="width:auto;" onchange="toggleTroco(false)"> Não
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--white);">
+                <input type="radio" name="troco" value="sim" style="width:auto;" onchange="toggleTroco(true)"> Sim
+              </label>
+            </div>
+            <input type="number" id="troco-valor" placeholder="Troco para R$..." style="display:none;" min="0" step="0.01">
+          </div>
+          <div id="pickup-info" style="display:none;" class="card-sm mt-8">
+            <p style="font-size:13px;color:var(--gray);">📍 Endereço de retirada:</p>
+            <p style="font-size:14px;font-weight:700;margin-top:4px;">Av. Principal, 1234 — Centro</p>
+          </div>
+          <button class="btn mt-16" onclick="confirmarCash()">Confirmar Pedido</button>
+        </div>
+      </div>
+    </div>
+    <div id="pay-success" style="display:none;max-width:400px;margin:40px auto;text-align:center;">
+      <div class="success-checkmark">
+        <svg viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+          <circle class="check-circle" cx="26" cy="26" r="24"/>
+          <path class="check-mark" d="M14 27l8 8 16-16"/>
+        </svg>
+      </div>
+      <h2 style="color:var(--green);font-family:'Bebas Neue',cursive;font-size:32px;letter-spacing:2px;">Pagamento Confirmado!</h2>
+      <p class="text-gray mt-8" id="pay-success-order"></p>
+      <button class="btn mt-20" onclick="goTrackFromPay()">Acompanhar meu Pedido →</button>
+    </div>
+  </div>
+
+  <!-- PORTAL 3 — ENTREGADOR -->
+  <div id="portal-entregador" class="portal-view">
+    <div id="entregador-login">
+      <div class="login-box">
+        <div class="login-logo">🏍️</div>
+        <div class="login-sub">Portal do Entregador</div>
+        <div class="form-group">
+          <label>Telefone</label>
+          <input type="text" id="ent-phone" placeholder="(99) 9 9999-9999" oninput="maskPhone(this)">
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="ent-pass" placeholder="••••••">
+        </div>
+        <button class="btn" onclick="loginEntregador()">Entrar</button>
+        <div style="text-align:center;margin-top:14px;">
+          <span class="text-gold" style="cursor:pointer;font-size:13px;font-weight:700;" onclick="showEntregadorCadastro()">Quero me cadastrar</span>
+        </div>
+      </div>
+    </div>
+    <div id="entregador-cadastro" style="display:none;">
+      <div class="login-box" style="max-width:460px;">
+        <div class="login-logo">📝</div>
+        <div class="login-sub">Cadastro de Entregador</div>
+        <div class="form-group"><label>Nome Completo</label><input type="text" id="ent-nome"></div>
+        <div class="row">
+          <div class="form-group"><label>CPF</label><input type="text" id="ent-cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)"></div>
+          <div class="form-group"><label>Telefone</label><input type="text" id="ent-tel" oninput="maskPhone(this)"></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="ent-email"></div>
+        <div class="row">
+          <div class="form-group">
+            <label>Veículo</label>
+            <select id="ent-veiculo" onchange="togglePlaca()">
+              <option value="Moto">Moto</option>
+              <option value="Bicicleta">Bicicleta</option>
+              <option value="Carro">Carro</option>
+              <option value="A pé">A pé</option>
+            </select>
+          </div>
+          <div class="form-group" id="placa-group">
+            <label>Placa</label>
+            <input type="text" id="ent-placa" placeholder="ABC-1234" oninput="this.value=this.value.toUpperCase()">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group"><label>Senha</label><input type="password" id="ent-senha1"></div>
+          <div class="form-group"><label>Confirmar Senha</label><input type="password" id="ent-senha2"></div>
+        </div>
+        <div class="form-group flex gap-8" style="align-items:flex-start;">
+          <input type="checkbox" id="ent-termos" style="width:auto;margin-top:3px;flex-shrink:0;">
+          <label for="ent-termos" style="margin:0;cursor:pointer;">Concordo com os termos de uso e política de privacidade</label>
+        </div>
+        <button class="btn" onclick="cadastrarEntregador()">Cadastrar</button>
+        <div style="text-align:center;margin-top:14px;">
+          <span class="text-gold" style="cursor:pointer;font-size:13px;" onclick="showEntregadorLogin()">← Voltar para login</span>
+        </div>
+      </div>
+    </div>
+    <div id="entregador-dashboard" style="display:none;">
+      <div class="flex-between" style="margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+        <div class="flex gap-12">
+          <div class="deliverer-avatar" id="ent-avatar-dash">E</div>
+          <div><div style="font-weight:800;font-size:16px;" id="ent-nome-dash">Entregador</div><div class="text-gray" style="font-size:13px;" id="ent-veiculo-dash"></div></div>
+        </div>
+        <div class="deliverer-status-toggle">
+          <div style="font-weight:700;font-size:14px;" id="ent-status-label">OFFLINE</div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="ent-toggle" onchange="toggleEntregadorStatus()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="ent-total-del">0</div><div class="stat-label">Entregas Totais</div></div>
+        <div class="stat-card"><div class="stat-number" id="ent-hoje-del">0</div><div class="stat-label">Hoje</div></div>
+      </div>
+      <div id="ent-pedido-atual" style="display:none;">
+        <div class="section-title" style="font-size:20px;">Pedido Atual</div>
+        <div class="card" id="ent-pedido-atual-content"></div>
+      </div>
+      <div class="section-title" style="font-size:20px;margin-top:20px;">Pedidos Disponíveis</div>
+      <div id="ent-available-orders"></div>
+      <div class="section-title" style="font-size:20px;margin-top:24px;">Histórico de Entregas</div>
+      <div id="ent-historico"></div>
+    </div>
+  </div>
+
+  <!-- PORTAL 4 — LOJA -->
+  <div id="portal-loja" class="portal-view">
+    <div id="loja-login">
+      <div class="login-box">
+        <div class="login-logo">🏪</div>
+        <div class="login-sub">Painel da Loja</div>
+        <div class="form-group">
+          <label>Senha de Acesso</label>
+          <input type="password" id="loja-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')loginLoja()">
+        </div>
+        <button class="btn" onclick="loginLoja()">Entrar</button>
+      </div>
+    </div>
+    <div id="loja-dashboard" style="display:none;">
+      <div class="loja-tabs">
+        <div class="loja-tab active" onclick="showLojaTab('kanban')">📋 Fila de Pedidos</div>
+        <div class="loja-tab" onclick="showLojaTab('novo')">➕ Novo Pedido</div>
+        <div class="loja-tab" onclick="showLojaTab('entregadores')">🏍️ Entregadores</div>
+        <div class="loja-tab" onclick="showLojaTab('relatorio')">📊 Relatório</div>
+      </div>
+      <div id="loja-metrics" class="metrics-grid">
+        <div class="metric-card"><div class="metric-value" id="m-hoje">0</div><div class="metric-label">Pedidos Hoje</div></div>
+        <div class="metric-card"><div class="metric-value" id="m-aberto" style="color:var(--red)">0</div><div class="metric-label">Em Aberto</div></div>
+        <div class="metric-card"><div class="metric-value" id="m-fat">R$0</div><div class="metric-label">Faturamento Hoje</div></div>
+        <div class="metric-card"><div class="metric-value" id="m-ent">0</div><div class="metric-label">Entregadores Ativos</div></div>
+      </div>
+      <!-- KANBAN -->
+      <div id="loja-tab-kanban">
+        <div class="kanban" id="kanban-board">
+          <div class="kanban-col">
+            <div class="kanban-col-header"><span class="kanban-col-title text-gold">NOVOS</span><span class="kanban-count" id="count-received">0</span></div>
+            <div id="col-received"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header"><span class="kanban-col-title" style="color:#ff8c00">PREPARANDO</span><span class="kanban-count" id="count-preparing">0</span></div>
+            <div id="col-preparing"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header"><span class="kanban-col-title" style="color:#6495ed">A CAMINHO</span><span class="kanban-count" id="count-on_the_way">0</span></div>
+            <div id="col-on_the_way"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header"><span class="kanban-col-title text-green">ENTREGUES</span><span class="kanban-count" id="count-delivered">0</span></div>
+            <div id="col-delivered"></div>
+          </div>
+        </div>
+        <div style="text-align:right;margin-top:10px;" class="sync-indicator" style="justify-content:flex-end;">
+          <div class="sync-dot"></div><span class="text-gray" style="font-size:12px;">Atualiza a cada 10s</span>
+        </div>
+      </div>
+      <!-- NOVO PEDIDO -->
+      <div id="loja-tab-novo" style="display:none;">
+        <div class="card" style="max-width:600px;">
+          <div class="section-title" style="font-size:22px;">Criar Pedido Manual</div>
+          <div class="row">
+            <div class="form-group"><label>Nome do Cliente</label><input type="text" id="np-nome"></div>
+            <div class="form-group"><label>Telefone</label><input type="text" id="np-tel" oninput="maskPhone(this)"></div>
+          </div>
+          <div class="form-group"><label>Endereço</label><input type="text" id="np-end" placeholder="Rua, número, bairro"></div>
+          <div class="form-group">
+            <label>Buscar Produto</label>
+            <input type="text" id="np-busca" placeholder="Digite o nome do produto..." oninput="buscarProdutoLoja(this.value)">
+            <div id="np-results" class="product-search-results" style="display:none;"></div>
+          </div>
+          <div id="np-items" class="items-list"></div>
+          <div class="totals-box" id="np-totals" style="display:none;">
+            <div class="total-row"><span>Subtotal</span><span id="np-sub">R$ 0,00</span></div>
+            <div class="total-row"><span>Taxa de Entrega</span><span>R$ 5,00</span></div>
+            <div class="total-row grand"><span>Total</span><span id="np-total">R$ 5,00</span></div>
+          </div>
+          <div class="form-group mt-16">
+            <label>Forma de Pagamento</label>
+            <select id="np-payment">
+              <option value="pix">PIX</option>
+              <option value="credit">Cartão de Crédito</option>
+              <option value="debit">Cartão de Débito</option>
+              <option value="cash">Dinheiro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Observações</label>
+            <textarea id="np-obs" rows="2" placeholder="Ex: Sem cebola, ponto da carne..."></textarea>
+          </div>
+          <button class="btn" onclick="criarPedidoManual()">Criar Pedido</button>
+        </div>
+      </div>
+      <!-- ENTREGADORES -->
+      <div id="loja-tab-entregadores" style="display:none;">
+        <div class="section-title" style="font-size:22px;">Gestão de Entregadores</div>
+        <div id="entregadores-list"></div>
+      </div>
+      <!-- RELATORIO -->
+      <div id="loja-tab-relatorio" style="display:none;">
+        <div class="section-title" style="font-size:22px;">Relatório do Dia</div>
+        <div class="card" style="margin-bottom:20px;">
+          <p style="font-size:13px;color:var(--gray);margin-bottom:10px;">Pedidos por hora</p>
+          <div class="bar-chart" id="bar-chart"></div>
+        </div>
+        <div id="relatorio-list"></div>
+        <div class="card mt-16" id="relatorio-footer"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main-content -->
+
+<!-- SETUP PANEL -->
+<div id="setup-panel" class="portal-view" style="display:none;">
+  <div class="setup-panel">
+    <div style="font-size:48px;margin-bottom:16px;">⚙️</div>
+    <h2 style="font-family:'Bebas Neue',cursive;font-size:32px;color:var(--gold);margin-bottom:12px;">Configuração Necessária</h2>
+    <p class="text-gray" style="margin-bottom:20px;">Execute o SQL abaixo no Supabase (SQL Editor) para criar as tabelas:</p>
+    <pre id="setup-sql"></pre>
+    <button class="btn" onclick="checkTablesAgain()">✅ Já criei as tabelas</button>
+  </div>
+</div>
+
+<!-- MODAL CLIENTE -->
+<div class="modal-overlay" id="modal-cliente">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="section-title" style="font-size:22px;">Criar Conta</div>
+    <div class="form-group"><label>Nome Completo</label><input type="text" id="c-nome"></div>
+    <div class="row">
+      <div class="form-group"><label>Telefone</label><input type="text" id="c-tel" oninput="maskPhone(this)"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="c-email"></div>
+    </div>
+    <div class="form-group"><label>Senha</label><input type="password" id="c-senha" placeholder="Mínimo 6 caracteres"></div>
+    <div class="form-group"><label>CEP</label><input type="text" id="c-cep" maxlength="9" oninput="maskCEP(this)" onblur="buscaCEP(this.value)"></div>
+    <div class="row">
+      <div class="form-group"><label>Rua</label><input type="text" id="c-rua"></div>
+      <div class="form-group" style="flex:0.4"><label>Número</label><input type="text" id="c-num"></div>
+    </div>
+    <div class="row">
+      <div class="form-group"><label>Complemento</label><input type="text" id="c-comp"></div>
+      <div class="form-group"><label>Bairro</label><input type="text" id="c-bairro"></div>
+    </div>
+    <button class="btn" onclick="cadastrarCliente()">Criar Conta</button>
+    <button class="btn btn-outline mt-8" onclick="closeModal('modal-cliente')">Cancelar</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<script>
+const SUPABASE_URL = 'https://cwjlkovqpdpmtgblidrv.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3amxrb3ZxcGRwbXRnYmxpZHJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODczODYsImV4cCI6MjA4OTM2MzM4Nn0.-AhhMLSUOhjZqE1SCfK4B1tCYm0atguUqPtRpSi-sKs';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// STATE
+let currentView = 'portal-selector';
+let currentCustomer = null;
+let currentDeliverer = null;
+let storeAuth = false;
+let clientePolling = null;
+let lojaPolling = null;
+let entregadorPolling = null;
+let pixTimer = null;
+let pixSeconds = 300;
+let pixExpiresAt = null;
+let currentPayOrder = null;
+let npItems = [];
+let allProducts = [];
+let tablesOk = false;
+let delivererHasEmailColumn = true;
+
+// ============ INIT ============
+(async function init(){
+  try {
+    const ok = await checkTables();
+    tablesOk = ok;
+    if(!ok){
+      document.getElementById('setup-panel').style.display='block';
+      document.getElementById('portal-selector').classList.remove('active');
+    }
+    if(ok){
+      await detectDelivererEmailColumn();
+    }
+    restoreSession();
+    if(ok){
+      await applyDeepLinkFromURL();
+    }
+  } catch(e){}
+  setTimeout(()=>{
+    const ls = document.getElementById('loading-screen');
+    ls.classList.add('fade-out');
+    setTimeout(()=>ls.style.display='none',500);
+  },2200);
+})();
+
+async function checkTables(){
+  const tables = ['pb_customers','pb_orders','pb_deliverers','pb_payments'];
+  for(const t of tables){
+    const {error} = await sb.from(t).select('id').limit(1);
+    if(error && error.message && error.message.includes('does not exist')) return false;
+  }
+  return true;
+}
+
+async function detectDelivererEmailColumn(){
+  const {error} = await sb.from('pb_deliverers').select('email').limit(1);
+  if(error && error.message && (error.message.includes("Could not find the 'email' column") || error.message.includes('pb_deliverers.email'))){
+    delivererHasEmailColumn = false;
+    return;
+  }
+  delivererHasEmailColumn = true;
+}
+
+async function checkTablesAgain(){
+  const ok = await checkTables();
+  if(ok){
+    tablesOk = true;
+    await detectDelivererEmailColumn();
+    document.getElementById('setup-panel').style.display='none';
+    showView('portal-selector');
+    toast('Tabelas encontradas! Sistema pronto.','success');
+  } else {
+    toast('Tabelas ainda não encontradas. Verifique o SQL.','error');
+  }
+}
+
+function getSetupSQL(){
+  return `-- Execute no Supabase SQL Editor:
+
+create table if not exists pb_customers (
+  id bigint primary key generated always as identity,
+  name text, phone text, email text, password_hash text,
+  address text, neighborhood text, complement text,
+  created_at timestamptz default now()
+);
+
+create table if not exists pb_orders (
+  id bigint primary key generated always as identity,
+  order_number text, customer_id bigint, customer_name text,
+  customer_phone text, customer_address text, items jsonb,
+  subtotal numeric default 0, delivery_fee numeric default 5,
+  total numeric default 0, payment_method text,
+  payment_status text default 'pending',
+  status text default 'received',
+  deliverer_id bigint, deliverer_name text, notes text,
+  created_at timestamptz default now(), updated_at timestamptz default now()
+);
+
+create table if not exists pb_deliverers (
+  id bigint primary key generated always as identity,
+  name text, phone text, email text, vehicle text, plate text, password text,
+  status text default 'offline', current_order_id bigint,
+  total_deliveries int default 0, created_at timestamptz default now()
+);
+
+alter table if exists pb_deliverers
+add column if not exists email text;
+
+create table if not exists pb_payments (
+  id bigint primary key generated always as identity,
+  order_id bigint, method text, amount numeric,
+  status text default 'pending', pix_key text, card_last4 text,
+  created_at timestamptz default now()
+);`;
+}
+
+document.getElementById('setup-sql').textContent = getSetupSQL();
+
+function restoreSession(){
+  const cust = sessionStorage.getItem('pb_customer');
+  const ent = sessionStorage.getItem('pb_deliverer');
+  const store = sessionStorage.getItem('pb_store_auth');
+  if(cust) currentCustomer = JSON.parse(cust);
+  if(ent) currentDeliverer = JSON.parse(ent);
+  if(store) storeAuth = true;
+}
+
+function normalizeOrderNumber(num){
+  const value = String(num || '').trim().toUpperCase();
+  if(!value) return '';
+  return value.startsWith('#') ? value : '#'+value;
+}
+
+async function applyDeepLinkFromURL(){
+  const params = new URLSearchParams(window.location.search);
+  const view = params.get('view');
+  const order = normalizeOrderNumber(params.get('order'));
+  if(view && document.getElementById(view)){
+    showView(view);
+  }
+  if(order && view==='portal-pagamento'){
+    document.getElementById('pay-order-input').value = order;
+    await buscarPedidoPagamento(false);
+  }
+  if(order && view==='portal-cliente'){
+    document.getElementById('track-input').value = order;
+    await buscarPedido();
+  }
+}
+
+function openCardapioAdmin(){
+  window.open('index.html?admin=1','_blank');
+}
+
+// ============ NAVIGATION ============
+function showView(name){
+  document.querySelectorAll('.portal-view').forEach(v=>v.classList.remove('active'));
+  const el = document.getElementById(name);
+  if(el){ el.classList.add('active'); currentView=name; }
+  document.getElementById('btn-back').style.display = name==='portal-selector'?'none':'block';
+  clearPollings();
+  if(name==='portal-loja' && storeAuth) startLojaPolling();
+  if(name==='portal-entregador' && currentDeliverer) startEntregadorPolling();
+}
+
+function goHome(){
+  clearPollings();
+  showView('portal-selector');
+  document.getElementById('btn-back').style.display='none';
+}
+
+function clearPollings(){
+  if(clientePolling) clearInterval(clientePolling);
+  if(lojaPolling) clearInterval(lojaPolling);
+  if(entregadorPolling) clearInterval(entregadorPolling);
+  if(pixTimer) clearInterval(pixTimer);
+}
+
+// ============ TOAST ============
+function toast(msg, type='success'){
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  const icons = {success:'✅',error:'❌',info:'ℹ️',warning:'⚠️'};
+  t.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(100%)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); },3000);
+}
+
+// ============ MASKS ============
+function maskPhone(el){
+  let v = el.value.replace(/\D/g,'');
+  if(v.length<=10) v=v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+  else v=v.replace(/(\d{2})(\d{1})(\d{4})(\d{0,4})/,'($1) $2 $3-$4');
+  el.value=v.substring(0,16);
+}
+function maskCPF(el){
+  let v=el.value.replace(/\D/g,'');
+  v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  el.value=v;
+}
+function maskCEP(el){
+  let v=el.value.replace(/\D/g,'');
+  if(v.length>5)v=v.substring(0,5)+'-'+v.substring(5,8);
+  el.value=v;
+}
+
+// ============ PORTAL 1 — CLIENTE ============
+async function buscarPedido(){
+  const num = document.getElementById('track-input').value.trim().toUpperCase();
+  if(!num){ toast('Digite o número do pedido','warning'); return; }
+  const n = num.startsWith('#')?num:'#'+num;
+  const {data,error} = await sb.from('pb_orders').select('*').eq('order_number',n).single();
+  if(error||!data){ toast('Pedido não encontrado','error'); return; }
+  renderTimeline(data);
+  document.getElementById('cliente-busca').style.display='none';
+  document.getElementById('cliente-timeline').style.display='block';
+  if(clientePolling) clearInterval(clientePolling);
+  clientePolling = startPolling(async()=>{
+    const {data:d2}=await sb.from('pb_orders').select('*').eq('order_number',n).single();
+    if(d2) renderTimeline(d2);
+  },15000);
+}
+
+function renderTimeline(order){
+  const steps=['received','preparing','on_the_way','delivered'];
+  const stepLabels=['Recebido','Preparando','A Caminho','Entregue'];
+  const stepIcons=['📥','👨‍🍳','🏍️','✅'];
+  const si=steps.indexOf(order.status);
+  let html=`
+  <div class="order-header">
+    <div class="flex-between">
+      <div class="order-number-big">${order.order_number}</div>
+      <span class="badge badge-${order.status}">${statusLabel(order.status)}</span>
+    </div>
+    <div class="text-gray" style="font-size:13px;margin-top:6px;">${fmtDate(order.created_at)}</div>
+  </div>
+  <div class="card">
+    <div class="timeline">`;
+  steps.forEach((s,i)=>{
+    const state = i<si?'done':i===si?'active':'pending';
+    html+=`<div class="timeline-step">`;
+    if(i<steps.length-1) html+=`<div class="timeline-line ${i<si?'done':'pending'}" style="z-index:0;"></div>`;
+    html+=`<div class="timeline-icon ${state}" style="z-index:1;">${i<si?'✅':stepIcons[i]}</div>
+    <div class="timeline-label ${state}">${stepLabels[i]}</div></div>`;
+  });
+  html+=`</div>`;
+  if(order.status==='on_the_way'&&order.deliverer_name){
+    html+=`<div class="deliverer-card">
+      <div class="deliverer-avatar">${order.deliverer_name[0]}</div>
+      <div>
+        <div style="font-weight:700;">${order.deliverer_name}</div>
+        <div class="text-gray" style="font-size:13px;">Em rota para você</div>
+        ${order.deliverer_phone?`<a href="tel:${order.deliverer_phone}" style="color:var(--gold);font-size:13px;font-weight:700;">📞 Ligar para entregador</a>`:''}
+      </div>
+    </div>`;
+  }
+  html+=`</div>
+  <div class="card mt-16">
+    <div class="section-title" style="font-size:18px;">Itens do Pedido</div>
+    <div class="items-list">`;
+  const items=Array.isArray(order.items)?order.items:(typeof order.items==='string'?JSON.parse(order.items):[]);
+  items.forEach(it=>{
+    html+=`<div class="item-row"><span class="item-name">${it.quantity||it.qty||1}x ${it.name}</span><span class="item-price">R$ ${fmtMoney((it.price||0)*(it.quantity||it.qty||1))}</span></div>`;
+  });
+  html+=`</div>
+  <div class="totals-box">
+    <div class="total-row"><span>Subtotal</span><span>R$ ${fmtMoney(order.subtotal||0)}</span></div>
+    <div class="total-row"><span>Taxa de Entrega</span><span>R$ ${fmtMoney(order.delivery_fee||5)}</span></div>
+    <div class="total-row grand"><span>Total</span><span>R$ ${fmtMoney(order.total||0)}</span></div>
+  </div>
+  <div class="divider"></div>
+  <div class="flex-between">
+    <span class="text-gray" style="font-size:13px;">Pagamento: <strong>${order.payment_method||'-'}</strong></span>
+    <span class="badge badge-${order.payment_status||'pending'}">${order.payment_status==='confirmed'?'Pago':'Pendente'}</span>
+  </div>
+  ${order.customer_address?`<div class="flex gap-8 mt-8"><span style="font-size:13px;">📍 ${order.customer_address}</span></div>`:''}
+  </div>
+  <div class="sync-indicator mt-8" style="justify-content:center;">
+    <div class="sync-dot"></div><span>Sincronizando a cada 15s</span>
+  </div>
+  <button class="btn btn-outline mt-16" onclick="document.getElementById('cliente-busca').style.display='block';document.getElementById('cliente-timeline').style.display='none';clearInterval(clientePolling);">← Rastrear outro pedido</button>`;
+  document.getElementById('timeline-content').innerHTML=html;
+}
+
+async function loginClienteByPhone(){
+  const phone = document.getElementById('cliente-phone-login').value.trim();
+  if(!phone){ toast('Digite seu telefone','warning'); return; }
+  const {data,error}=await sb.from('pb_customers').select('*').eq('phone',phone).single();
+  if(error||!data){ toast('Telefone não encontrado. Crie uma conta.','error'); return; }
+  currentCustomer=data;
+  sessionStorage.setItem('pb_customer',JSON.stringify(data));
+  loadMeusPedidos();
+  document.getElementById('cliente-busca').style.display='none';
+  document.getElementById('cliente-meus-pedidos').style.display='block';
+}
+
+async function loadMeusPedidos(){
+  if(!currentCustomer) return;
+  const {data}=await sb.from('pb_orders').select('*').eq('customer_id',currentCustomer.id).order('created_at',{ascending:false}).limit(10);
+  const el=document.getElementById('meus-pedidos-list');
+  if(!data||!data.length){ el.innerHTML='<p class="text-gray">Nenhum pedido encontrado.</p>'; return; }
+  el.innerHTML=data.map(o=>`
+  <div class="card-sm" style="margin-bottom:10px;cursor:pointer;" onclick="mostrarPedidoById('${o.order_number}')">
+    <div class="flex-between">
+      <span style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);">${o.order_number}</span>
+      <span class="badge badge-${o.status}">${statusLabel(o.status)}</span>
+    </div>
+    <div class="text-gray" style="font-size:12px;">${fmtDate(o.created_at)} • R$ ${fmtMoney(o.total||0)}</div>
+  </div>`).join('');
+}
+
+async function mostrarPedidoById(num){
+  const {data}=await sb.from('pb_orders').select('*').eq('order_number',num).single();
+  if(data){
+    renderTimeline(data);
+    document.getElementById('cliente-meus-pedidos').style.display='none';
+    document.getElementById('cliente-timeline').style.display='block';
+  }
+}
+
+function showClienteModal(){ document.getElementById('modal-cliente').classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+async function cadastrarCliente(){
+  const nome=document.getElementById('c-nome').value.trim();
+  const tel=document.getElementById('c-tel').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const senha=document.getElementById('c-senha').value;
+  const rua=document.getElementById('c-rua').value.trim();
+  const num=document.getElementById('c-num').value.trim();
+  const comp=document.getElementById('c-comp').value.trim();
+  const bairro=document.getElementById('c-bairro').value.trim();
+  if(!nome||!tel||!senha||senha.length<6){ toast('Preencha os campos obrigatórios (senha min. 6 chars)','warning'); return; }
+  const addr=`${rua}, ${num}${comp?' - '+comp:''}`;
+  const {data,error}=await sb.from('pb_customers').insert({name:nome,phone:tel,email,password_hash:btoa(senha),address:addr,neighborhood:bairro,complement:comp}).select().single();
+  if(error){ toast('Erro ao criar conta: '+error.message,'error'); return; }
+  currentCustomer=data;
+  sessionStorage.setItem('pb_customer',JSON.stringify(data));
+  closeModal('modal-cliente');
+  toast('Conta criada com sucesso!','success');
+}
+
+async function buscaCEP(cep){
+  cep=cep.replace(/\D/g,'');
+  if(cep.length!==8) return;
+  try{
+    const r=await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const d=await r.json();
+    if(!d.erro){
+      document.getElementById('c-rua').value=d.logradouro||'';
+      document.getElementById('c-bairro').value=d.bairro||'';
+    }
+  }catch(e){}
+}
+
+// ============ PORTAL 2 — PAGAMENTO ============
+async function buscarPedidoPagamento(showToast=true){
+  const n=normalizeOrderNumber(document.getElementById('pay-order-input').value);
+  if(!n){ if(showToast) toast('Digite o número do pedido','warning'); return false; }
+  const {data,error}=await sb.from('pb_orders').select('*').eq('order_number',n).single();
+  if(error||!data){ if(showToast) toast('Pedido não encontrado','error'); return false; }
+  currentPayOrder=data;
+  renderPaySummary(data);
+  document.getElementById('pay-busca').style.display='none';
+  document.getElementById('pay-checkout').style.display='block';
+  generateQR();
+  initPixCountdown(true);
+  return true;
+}
+
+function renderPaySummary(order){
+  const items=Array.isArray(order.items)?order.items:(typeof order.items==='string'?JSON.parse(order.items):[]);
+  let html=`<div class="section-title" style="font-size:18px;">${order.order_number}</div>
+  <div class="items-list">`;
+  items.forEach(it=>{
+    html+=`<div class="item-row"><span>${it.quantity||it.qty||1}x ${it.name}</span><span class="item-price">R$ ${fmtMoney((it.price||0)*(it.quantity||it.qty||1))}</span></div>`;
+  });
+  html+=`</div><div class="totals-box">
+    <div class="total-row"><span>Subtotal</span><span>R$ ${fmtMoney(order.subtotal||0)}</span></div>
+    <div class="total-row"><span>Taxa de Entrega</span><span>R$ ${fmtMoney(order.delivery_fee||5)}</span></div>
+    <div class="total-row grand"><span>Total</span><span>R$ ${fmtMoney(order.total||0)}</span></div>
+  </div>`;
+  document.getElementById('pay-order-summary').innerHTML=html;
+}
+
+function showPayTab(t){
+  document.querySelectorAll('.payment-tab').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('[id^="pay-tab-"]').forEach(e=>e.style.display='none');
+  event.target.classList.add('active');
+  document.getElementById('pay-tab-'+t).style.display='block';
+  if(t==='pix'){ generateQR(); reinitPix(); }
+}
+
+function generateQR(){
+  const svg=document.getElementById('pix-qr-svg');
+  if(!svg) return;
+  const size=21,cellSize=160/size;
+  let s='';
+  const finder=(r,c)=>{
+    for(let i=r;i<r+7;i++) for(let j=c;j<c+7;j++){
+      const b=(i===r||i===r+6||j===c||j===c+6)||(i>=r+2&&i<=r+4&&j>=c+2&&j<=c+4);
+      if(b) s+=`<rect x="${j*cellSize}" y="${i*cellSize}" width="${cellSize}" height="${cellSize}" fill="#000"/>`;
+    }
+  };
+  finder(0,0); finder(0,14); finder(14,0);
+  // data modules
+  for(let i=0;i<size;i++) for(let j=0;j<size;j++){
+    if((i<9&&j<9)||(i<9&&j>=14)||(i>=14&&j<9)) continue;
+    if(Math.random()>.5) s+=`<rect x="${j*cellSize}" y="${i*cellSize}" width="${cellSize}" height="${cellSize}" fill="#000"/>`;
+  }
+  svg.innerHTML=s;
+}
+
+function initPixCountdown(){
+  if(pixTimer) clearInterval(pixTimer);
+  pixSeconds=300;
+  updatePixDisplay();
+  pixTimer=setInterval(()=>{
+    pixSeconds--;
+    updatePixDisplay();
+    if(pixSeconds<=0){
+      clearInterval(pixTimer);
+      document.getElementById('pix-countdown').textContent='Expirado';
+      document.getElementById('btn-confirmar-pix').style.display='none';
+      document.getElementById('btn-novo-pix').style.display='block';
+    }
+  },1000);
+}
+
+function updatePixDisplay(){
+  const m=Math.floor(pixSeconds/60),s=pixSeconds%60;
+  const el=document.getElementById('pix-countdown');
+  if(el) el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  if(el && pixSeconds<60) el.classList.add('urgent'); else if(el) el.classList.remove('urgent');
+  const prog=document.getElementById('pix-progress');
+  if(prog) prog.style.width=(pixSeconds/300*100)+'%';
+}
+
+function reinitPix(){ document.getElementById('btn-confirmar-pix').style.display='block'; document.getElementById('btn-novo-pix').style.display='none'; generateQR(); initPixCountdown(); }
+
+async function confirmarPix(){
+  if(!currentPayOrder) return;
+  await sb.from('pb_orders').update({payment_status:'pending_confirmation',updated_at:new Date().toISOString()}).eq('id',currentPayOrder.id);
+  await sb.from('pb_payments').insert({order_id:currentPayOrder.id,method:'pix',amount:currentPayOrder.total,status:'pending',pix_key:'piburguer@pix.com'});
+  clearInterval(pixTimer);
+  showPaySuccess();
+}
+
+async function copyPix(){
+  await navigator.clipboard.writeText('piburguer@pix.com');
+  toast('Chave PIX copiada!','success');
+}
+
+function toggleTroco(show){
+  document.getElementById('troco-valor').style.display=show?'block':'none';
+}
+
+document.getElementById('cash-type')?.addEventListener('change',function(){
+  document.getElementById('pickup-info').style.display=this.value==='pickup'?'block':'none';
+  document.getElementById('troco-group').style.display=this.value==='pickup'?'none':'block';
+});
+
+async function confirmarCash(){
+  if(!currentPayOrder) return;
+  const method=document.getElementById('cash-type').value;
+  await sb.from('pb_orders').update({payment_method:method,payment_status:'pending',updated_at:new Date().toISOString()}).eq('id',currentPayOrder.id);
+  showPaySuccess();
+}
+
+// CARD
+function flipCard(flip){ document.getElementById('card-flip').classList.toggle('flipped',flip); }
+
+function formatCardNum(el){
+  let v=el.value.replace(/\D/g,'');
+  v=v.match(/.{1,4}/g)?.join(' ')||v;
+  el.value=v.substring(0,19);
+  const raw=v.replace(/\s/g,'');
+  let brand='';
+  if(raw[0]==='4') brand='💳 VISA';
+  else if(raw[0]==='5') brand='💳 MC';
+  document.getElementById('card-brand-front').textContent=brand;
+  const masked=v.padEnd(19,'#').substring(0,19).replace(/\d(?=.{4})/g,'•');
+  document.getElementById('card-num-display').textContent=masked;
+}
+
+function formatExp(el){
+  let v=el.value.replace(/\D/g,'');
+  if(v.length>2) v=v.substring(0,2)+'/'+v.substring(2,4);
+  el.value=v;
+  document.getElementById('card-exp-display').textContent=v||'MM/AA';
+}
+
+function luhnCheck(num){
+  let sum=0,alt=false;
+  for(let i=num.length-1;i>=0;i--){
+    let d=parseInt(num[i]);
+    if(alt){ d*=2; if(d>9)d-=9; }
+    sum+=d; alt=!alt;
+  }
+  return sum%10===0;
+}
+
+async function processarCartao(){
+  const num=document.getElementById('card-num').value.replace(/\s/g,'');
+  const name=document.getElementById('card-name').value.trim();
+  const exp=document.getElementById('card-exp').value;
+  const cvv=document.getElementById('card-cvv').value;
+  if(!num||num.length<13||!luhnCheck(num)){ toast('Número de cartão inválido','error'); return; }
+  if(!name){ toast('Digite o nome no cartão','warning'); return; }
+  if(!exp.match(/^\d{2}\/\d{2}$/)){ toast('Validade inválida','warning'); return; }
+  const [mm,yy]=exp.split('/');
+  const expDate=new Date(2000+parseInt(yy),parseInt(mm)-1);
+  if(expDate<new Date()){ toast('Cartão expirado','error'); return; }
+  if(!cvv||cvv.length<3){ toast('CVV inválido','warning'); return; }
+  if(!currentPayOrder) return;
+  const btn=event.target; btn.disabled=true; btn.textContent='Processando…';
+  await new Promise(r=>setTimeout(r,2000));
+  await sb.from('pb_orders').update({payment_method:'credit',payment_status:'confirmed',updated_at:new Date().toISOString()}).eq('id',currentPayOrder.id);
+  await sb.from('pb_payments').insert({order_id:currentPayOrder.id,method:'credit',amount:currentPayOrder.total,status:'confirmed',card_last4:num.slice(-4)});
+  btn.disabled=false; btn.textContent='Pagar com Cartão';
+  showPaySuccess();
+}
+
+function showPaySuccess(){
+  document.getElementById('pay-checkout').style.display='none';
+  document.getElementById('pay-success').style.display='block';
+  document.getElementById('pay-success-order').textContent=`Pedido ${currentPayOrder?.order_number||''} confirmado com sucesso!`;
+}
+
+function goTrackFromPay(){
+  const num=currentPayOrder?.order_number||'';
+  showView('portal-cliente');
+  document.getElementById('track-input').value=num;
+  setTimeout(buscarPedido,100);
+}
+
+// ============ PORTAL 3 — ENTREGADOR ============
+function showEntregadorCadastro(){ document.getElementById('entregador-login').style.display='none'; document.getElementById('entregador-cadastro').style.display='block'; }
+function showEntregadorLogin(){ document.getElementById('entregador-cadastro').style.display='none'; document.getElementById('entregador-login').style.display='block'; }
+
+function togglePlaca(){
+  const v=document.getElementById('ent-veiculo').value;
+  document.getElementById('placa-group').style.display=(v==='Moto'||v==='Carro')?'block':'none';
+}
+
+async function loginEntregador(){
+  const phone=document.getElementById('ent-phone').value.trim();
+  const pass=document.getElementById('ent-pass').value;
+  if(!phone||!pass){ toast('Preencha todos os campos','warning'); return; }
+  const {data,error}=await sb.from('pb_deliverers').select('*').eq('phone',phone).eq('password',pass).single();
+  if(error||!data){ toast('Credenciais inválidas','error'); return; }
+  currentDeliverer=data;
+  sessionStorage.setItem('pb_deliverer',JSON.stringify(data));
+  showEntregadorDashboard();
+}
+
+async function cadastrarEntregador(){
+  const nome=document.getElementById('ent-nome').value.trim();
+  const phone=document.getElementById('ent-tel').value.trim();
+  const email=document.getElementById('ent-email').value.trim();
+  const veiculo=document.getElementById('ent-veiculo').value;
+  const placa=document.getElementById('ent-placa').value.trim();
+  const senha1=document.getElementById('ent-senha1').value;
+  const senha2=document.getElementById('ent-senha2').value;
+  const termos=document.getElementById('ent-termos').checked;
+  if(!nome||!phone||!senha1){ toast('Preencha os campos obrigatórios','warning'); return; }
+  if(senha1!==senha2){ toast('Senhas não conferem','error'); return; }
+  if(!termos){ toast('Aceite os termos para continuar','warning'); return; }
+  const payload={name:nome,phone,vehicle:veiculo,plate:placa,password:senha1,status:'offline',total_deliveries:0};
+  if(delivererHasEmailColumn && email) payload.email=email;
+  let {data,error}=await sb.from('pb_deliverers').insert(payload).select().single();
+  if(error && error.message && error.message.includes("Could not find the 'email' column")){
+    delivererHasEmailColumn=false;
+    delete payload.email;
+    const retry=await sb.from('pb_deliverers').insert(payload).select().single();
+    data=retry.data;
+    error=retry.error;
+  }
+  if(error){ toast('Erro ao cadastrar: '+error.message,'error'); return; }
+  currentDeliverer=data;
+  sessionStorage.setItem('pb_deliverer',JSON.stringify(data));
+  toast('Cadastro realizado!','success');
+  showEntregadorDashboard();
+}
+
+function showEntregadorDashboard(){
+  document.getElementById('entregador-login').style.display='none';
+  document.getElementById('entregador-cadastro').style.display='none';
+  document.getElementById('entregador-dashboard').style.display='block';
+  renderEntregadorDash();
+  startEntregadorPolling();
+}
+
+async function renderEntregadorDash(){
+  if(!currentDeliverer) return;
+  const {data}=await sb.from('pb_deliverers').select('*').eq('id',currentDeliverer.id).single();
+  if(data) currentDeliverer=data;
+  document.getElementById('ent-avatar-dash').textContent=currentDeliverer.name?.[0]||'E';
+  document.getElementById('ent-nome-dash').textContent=currentDeliverer.name||'';
+  document.getElementById('ent-veiculo-dash').textContent=`${currentDeliverer.vehicle||''} ${currentDeliverer.plate||''}`.trim();
+  document.getElementById('ent-total-del').textContent=currentDeliverer.total_deliveries||0;
+  document.getElementById('ent-toggle').checked=currentDeliverer.status==='available';
+  document.getElementById('ent-status-label').textContent=currentDeliverer.status==='available'?'DISPONÍVEL':'OFFLINE';
+  // Hoje deliveries
+  const today=new Date().toISOString().split('T')[0];
+  const {data:hj}=await sb.from('pb_orders').select('id').eq('deliverer_id',currentDeliverer.id).gte('updated_at',today).eq('status','delivered');
+  document.getElementById('ent-hoje-del').textContent=hj?.length||0;
+  // pedido atual
+  if(currentDeliverer.current_order_id){
+    const {data:po}=await sb.from('pb_orders').select('*').eq('id',currentDeliverer.current_order_id).single();
+    if(po&&po.status!=='delivered'){
+      document.getElementById('ent-pedido-atual').style.display='block';
+      renderEntPedidoAtual(po);
+    }else{
+      document.getElementById('ent-pedido-atual').style.display='none';
+    }
+  }else{
+    document.getElementById('ent-pedido-atual').style.display='none';
+  }
+  await loadAvailableOrders();
+  await loadEntHistorico();
+}
+
+function renderEntPedidoAtual(order){
+  const items=Array.isArray(order.items)?order.items:(typeof order.items==='string'?JSON.parse(order.items):[]);
+  document.getElementById('ent-pedido-atual-content').innerHTML=`
+  <div class="flex-between">
+    <span style="font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);">${order.order_number}</span>
+    <span class="badge badge-${order.status}">${statusLabel(order.status)}</span>
+  </div>
+  <div style="font-weight:700;margin:8px 0;">${order.customer_name||'Cliente'}</div>
+  <div class="text-gray" style="font-size:13px;margin-bottom:12px;">📍 ${order.customer_address||'Sem endereço'}</div>
+  <div class="text-gray" style="font-size:13px;margin-bottom:12px;">${items.map(i=>`${i.quantity||1}x ${i.name}`).join(', ')}</div>
+  <div style="background:var(--navy2);border-radius:12px;height:100px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:13px;margin-bottom:12px;border:1px solid rgba(245,166,35,.1);">
+    📍 Mapa de rota — integração disponível
+  </div>
+  <div class="row">
+    ${order.status==='preparing'?`<button class="btn" onclick="sairParaEntrega(${order.id})">🏍️ Saiu para entrega</button>`:''}
+    ${order.status==='on_the_way'?`<button class="btn btn-green" onclick="concluirEntrega(${order.id})">✅ Entrega concluída</button>`:''}
+  </div>`;
+}
+
+async function toggleEntregadorStatus(){
+  if(!currentDeliverer) return;
+  const newStatus=document.getElementById('ent-toggle').checked?'available':'offline';
+  await sb.from('pb_deliverers').update({status:newStatus}).eq('id',currentDeliverer.id);
+  currentDeliverer.status=newStatus;
+  document.getElementById('ent-status-label').textContent=newStatus==='available'?'DISPONÍVEL':'OFFLINE';
+  toast(newStatus==='available'?'Agora você está disponível!':'Você foi para offline','info');
+}
+
+async function loadAvailableOrders(){
+  const {data}=await sb.from('pb_orders').select('*').in('status',['preparing']).is('deliverer_id',null).order('created_at',{ascending:true}).limit(10);
+  const el=document.getElementById('ent-available-orders');
+  if(!data||!data.length){ el.innerHTML='<p class="text-gray">Nenhum pedido disponível no momento.</p>'; return; }
+  el.innerHTML=data.map(o=>`
+  <div class="available-order-card">
+    <div>
+      <span style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);">${o.order_number}</span>
+      <div style="font-size:13px;font-weight:600;">${o.customer_name||'Cliente'}</div>
+      <div class="text-gray" style="font-size:12px;">📍 ${o.customer_address||'Sem endereço'}</div>
+      <div class="text-gold" style="font-size:13px;font-weight:700;">R$ ${fmtMoney(o.total||0)}</div>
+    </div>
+    <button class="btn btn-sm" onclick="aceitarPedido(${o.id})">Aceitar</button>
+  </div>`).join('');
+}
+
+async function aceitarPedido(orderId){
+  if(!currentDeliverer){ toast('Faça login primeiro','warning'); return; }
+  if(currentDeliverer.status==='busy'){ toast('Você já tem um pedido ativo','warning'); return; }
+  const {data:ent}=await sb.from('pb_deliverers').select('*').eq('id',currentDeliverer.id).single();
+  if(ent&&ent.current_order_id){ toast('Você já tem um pedido ativo','warning'); return; }
+  await sb.from('pb_orders').update({deliverer_id:currentDeliverer.id,deliverer_name:currentDeliverer.name,updated_at:new Date().toISOString()}).eq('id',orderId);
+  await sb.from('pb_deliverers').update({status:'busy',current_order_id:orderId}).eq('id',currentDeliverer.id);
+  currentDeliverer.status='busy'; currentDeliverer.current_order_id=orderId;
+  toast('Pedido aceito!','success');
+  renderEntregadorDash();
+}
+
+async function sairParaEntrega(orderId){
+  await sb.from('pb_orders').update({status:'on_the_way',updated_at:new Date().toISOString()}).eq('id',orderId);
+  toast('Status atualizado: A Caminho!','success');
+  renderEntregadorDash();
+}
+
+async function concluirEntrega(orderId){
+  await sb.from('pb_orders').update({status:'delivered',updated_at:new Date().toISOString()}).eq('id',orderId);
+  const newTotal=(currentDeliverer.total_deliveries||0)+1;
+  await sb.from('pb_deliverers').update({status:'available',current_order_id:null,total_deliveries:newTotal}).eq('id',currentDeliverer.id);
+  currentDeliverer.status='available'; currentDeliverer.current_order_id=null; currentDeliverer.total_deliveries=newTotal;
+  toast('Entrega concluída! Parabéns! 🎉','success');
+  renderEntregadorDash();
+}
+
+async function loadEntHistorico(){
+  const {data}=await sb.from('pb_orders').select('*').eq('deliverer_id',currentDeliverer.id).eq('status','delivered').order('updated_at',{ascending:false}).limit(10);
+  const el=document.getElementById('ent-historico');
+  if(!data||!data.length){ el.innerHTML='<p class="text-gray">Nenhuma entrega realizada ainda.</p>'; return; }
+  el.innerHTML=data.map(o=>`
+  <div class="history-item">
+    <div><span style="font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);">${o.order_number}</span><div class="text-gray" style="font-size:12px;">${fmtDate(o.updated_at)} • ${o.customer_address||''}</div></div>
+    <span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(o.total||0)}</span>
+  </div>`).join('');
+}
+
+function startEntregadorPolling(){
+  if(entregadorPolling) clearInterval(entregadorPolling);
+  entregadorPolling=setInterval(()=>{ if(currentDeliverer) renderEntregadorDash(); },20000);
+}
+
+// ============ PORTAL 4 — LOJA ============
+function loginLoja(){
+  const pass=document.getElementById('loja-pass').value;
+  if(pass==='2026'){
+    storeAuth=true;
+    sessionStorage.setItem('pb_store_auth','1');
+    document.getElementById('loja-login').style.display='none';
+    document.getElementById('loja-dashboard').style.display='block';
+    loadLojaData();
+    startLojaPolling();
+  } else {
+    toast('Senha incorreta','error');
+  }
+}
+
+function showLojaTab(tab){
+  document.querySelectorAll('[id^="loja-tab-"]').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.loja-tab').forEach(e=>e.classList.remove('active'));
+  document.getElementById('loja-tab-'+tab).style.display='block';
+  event.target.classList.add('active');
+  if(tab==='relatorio') renderRelatorio();
+  if(tab==='entregadores') loadEntregadoresLoja();
+  if(tab==='novo') loadProductsForSearch();
+}
+
+async function loadLojaData(){
+  await renderKanban();
+  await updateMetrics();
+}
+
+async function updateMetrics(){
+  const today=new Date().toISOString().split('T')[0];
+  const {data:orders}=await sb.from('pb_orders').select('*').gte('created_at',today);
+  const {data:ents}=await sb.from('pb_deliverers').select('*').eq('status','available');
+  const total=orders?.length||0;
+  const aberto=orders?.filter(o=>['received','preparing'].includes(o.status)).length||0;
+  const fat=orders?.filter(o=>o.status!=='cancelled').reduce((a,b)=>a+(b.total||0),0)||0;
+  document.getElementById('m-hoje').textContent=total;
+  document.getElementById('m-aberto').textContent=aberto;
+  document.getElementById('m-fat').textContent='R$'+fmtMoney(fat);
+  document.getElementById('m-ent').textContent=ents?.length||0;
+}
+
+async function renderKanban(){
+  const statuses=['received','preparing','on_the_way','delivered'];
+  const {data:orders}=await sb.from('pb_orders').select('*').in('status',statuses).order('created_at',{ascending:true});
+  statuses.forEach(s=>{
+    const col=document.getElementById('col-'+s);
+    const cnt=document.getElementById('count-'+s);
+    if(!col) return;
+    const filtered=(orders||[]).filter(o=>o.status===s);
+    if(cnt) cnt.textContent=filtered.length;
+    col.innerHTML=filtered.slice(0,20).map(o=>renderKanbanCard(o)).join('');
+  });
+}
+
+function renderKanbanCard(o){
+  const items=Array.isArray(o.items)?o.items:(typeof o.items==='string'?JSON.parse(o.items):[]);
+  const mins=Math.floor((Date.now()-new Date(o.created_at).getTime())/60000);
+  const timerCls=mins>=20?'warn':'ok';
+  const preview=items.slice(0,2).map(i=>`${i.quantity||1}x ${i.name}`).join(', ')+(items.length>2?` +${items.length-2}`:'');
+  let actions='';
+  if(o.status==='received'){
+    actions=`<div class="row" style="gap:6px;margin-top:8px;">
+      <button class="btn btn-sm" onclick="aceitarPedidoLoja(${o.id})">Aceitar</button>
+      <button class="btn btn-sm btn-danger" onclick="recusarPedido(${o.id})">Recusar</button>
+    </div>`;
+  }else if(o.status==='preparing'){
+    actions=`<div style="margin-top:8px;">
+      <button class="btn btn-sm" style="margin-bottom:6px;width:100%;" onclick="prontoEntrega(${o.id})">✅ Pronto p/ entrega</button>
+      <select onchange="atribuirEntregador(${o.id},this.value,this)" style="font-size:12px;padding:6px;width:100%;">
+        <option value="">Atribuir entregador…</option>
+      </select>
+    </div>`;
+  }
+  return `<div class="order-card">
+    <div class="flex-between">
+      <span class="order-card-num">${o.order_number}</span>
+      <span class="order-timer ${timerCls}">${mins}min</span>
+    </div>
+    <div style="font-size:13px;font-weight:700;margin:4px 0;">${o.customer_name||'Cliente'}</div>
+    <div class="order-items-preview">${preview}</div>
+    <div class="flex-between">
+      <span class="text-gold" style="font-size:13px;font-weight:700;">R$ ${fmtMoney(o.total||0)}</span>
+      <span class="badge badge-${o.payment_status||'pending'}">${o.payment_status==='confirmed'?'Pago':'Pendente'}</span>
+    </div>
+    ${actions}
+  </div>`;
+}
+
+async function aceitarPedidoLoja(id){
+  await sb.from('pb_orders').update({status:'preparing',updated_at:new Date().toISOString()}).eq('id',id);
+  toast('Pedido aceito!','success');
+  renderKanban(); updateMetrics();
+}
+
+async function recusarPedido(id){
+  await sb.from('pb_orders').update({status:'cancelled',updated_at:new Date().toISOString()}).eq('id',id);
+  toast('Pedido recusado','warning');
+  renderKanban(); updateMetrics();
+}
+
+async function prontoEntrega(id){
+  await sb.from('pb_orders').update({status:'preparing',updated_at:new Date().toISOString()}).eq('id',id);
+  // load deliverers into dropdown
+  const {data}=await sb.from('pb_deliverers').select('*').eq('status','available');
+  // find the select in the card
+  const cards=document.querySelectorAll('.order-card');
+  cards.forEach(card=>{
+    const sel=card.querySelector('select');
+    if(sel&&sel.getAttribute('onchange')?.includes(id)){
+      sel.innerHTML=`<option value="">Atribuir entregador…</option>`+(data||[]).map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+    }
+  });
+  toast('Pedido pronto para entrega!','success');
+}
+
+async function atribuirEntregador(orderId,entId,sel){
+  if(!entId) return;
+  const {data:ent}=await sb.from('pb_deliverers').select('*').eq('id',entId).single();
+  if(!ent) return;
+  await sb.from('pb_orders').update({status:'on_the_way',deliverer_id:entId,deliverer_name:ent.name,updated_at:new Date().toISOString()}).eq('id',orderId);
+  await sb.from('pb_deliverers').update({status:'busy',current_order_id:orderId}).eq('id',entId);
+  toast(`Entregador ${ent.name} atribuído!`,'success');
+  renderKanban(); updateMetrics();
+}
+
+// NOVO PEDIDO
+async function loadProductsForSearch(){
+  const {data}=await sb.from('pb_products').select('*').limit(100);
+  allProducts=data||[];
+}
+
+function buscarProdutoLoja(q){
+  const res=document.getElementById('np-results');
+  if(!q){res.style.display='none';return;}
+  const filtered=allProducts.filter(p=>p.name&&p.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
+  if(!filtered.length){res.style.display='none';return;}
+  res.style.display='block';
+  res.innerHTML=filtered.map(p=>`
+  <div class="product-result-item" onclick="addProductNP(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+    <span>${p.name}</span><span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(p.price||0)}</span>
+  </div>`).join('');
+}
+
+function addProductNP(p){
+  const existing=npItems.find(i=>i.id===p.id);
+  if(existing) existing.quantity++;
+  else npItems.push({id:p.id,name:p.name,price:p.price||0,quantity:1});
+  document.getElementById('np-busca').value='';
+  document.getElementById('np-results').style.display='none';
+  renderNPItems();
+}
+
+function renderNPItems(){
+  const el=document.getElementById('np-items');
+  if(!npItems.length){el.innerHTML='';document.getElementById('np-totals').style.display='none';return;}
+  el.innerHTML=npItems.map((it,i)=>`
+  <div class="item-row">
+    <span class="item-name">${it.name}</span>
+    <div class="qty-control">
+      <button class="qty-btn" onclick="changeNPQty(${i},-1)">−</button>
+      <span class="qty-val">${it.quantity}</span>
+      <button class="qty-btn" onclick="changeNPQty(${i},1)">+</button>
+      <button class="qty-btn" onclick="removeNPItem(${i})" style="color:var(--red);border-color:var(--red);">×</button>
+    </div>
+    <span class="item-price">R$ ${fmtMoney(it.price*it.quantity)}</span>
+  </div>`).join('');
+  const sub=npItems.reduce((a,b)=>a+b.price*b.quantity,0);
+  document.getElementById('np-sub').textContent='R$ '+fmtMoney(sub);
+  document.getElementById('np-total').textContent='R$ '+fmtMoney(sub+5);
+  document.getElementById('np-totals').style.display='block';
+}
+
+function changeNPQty(i,d){ npItems[i].quantity+=d; if(npItems[i].quantity<=0)npItems.splice(i,1); renderNPItems(); }
+function removeNPItem(i){ npItems.splice(i,1); renderNPItems(); }
+
+async function criarPedidoManual(){
+  const nome=document.getElementById('np-nome').value.trim();
+  const tel=document.getElementById('np-tel').value.trim();
+  const end=document.getElementById('np-end').value.trim();
+  const payment=document.getElementById('np-payment').value;
+  const obs=document.getElementById('np-obs').value.trim();
+  if(!nome||!npItems.length){ toast('Preencha nome e adicione itens','warning'); return; }
+  const sub=npItems.reduce((a,b)=>a+b.price*b.quantity,0);
+  const num=await generateOrderNumber();
+  const {data,error}=await sb.from('pb_orders').insert({
+    order_number:num,customer_name:nome,customer_phone:tel,customer_address:end,
+    items:JSON.stringify(npItems.map(i=>({name:i.name,price:i.price,quantity:i.quantity}))),
+    subtotal:sub,delivery_fee:5,total:sub+5,
+    payment_method:payment,payment_status:'pending',status:'received',notes:obs
+  }).select().single();
+  if(error){ toast('Erro ao criar pedido: '+error.message,'error'); return; }
+  npItems=[];renderNPItems();
+  ['np-nome','np-tel','np-end','np-obs'].forEach(id=>document.getElementById(id).value='');
+  toast(`Pedido ${num} criado com sucesso!`,'success');
+  showLojaTabDirect('kanban');
+  renderKanban(); updateMetrics();
+}
+
+function showLojaTabDirect(tab){
+  document.querySelectorAll('[id^="loja-tab-"]').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.loja-tab').forEach(e=>e.classList.remove('active'));
+  const tabEl=document.getElementById('loja-tab-'+tab);
+  if(tabEl) tabEl.style.display='block';
+  const tabBtn=document.querySelector(`.loja-tab[onclick*="'${tab}'"]`);
+  if(tabBtn) tabBtn.classList.add('active');
+}
+
+async function loadEntregadoresLoja(){
+  const {data}=await sb.from('pb_deliverers').select('*').order('name');
+  const el=document.getElementById('entregadores-list');
+  if(!data||!data.length){ el.innerHTML='<p class="text-gray">Nenhum entregador cadastrado.</p>'; return; }
+  el.innerHTML=data.map(e=>`
+  <div class="card-sm flex-between" style="margin-bottom:10px;flex-wrap:wrap;gap:10px;">
+    <div class="flex gap-12">
+      <div class="deliverer-avatar" style="width:42px;height:42px;font-size:18px;">${e.name?.[0]||'E'}</div>
+      <div>
+        <div style="font-weight:700;">${e.name}</div>
+        <div class="text-gray" style="font-size:12px;">${e.vehicle||''} ${e.plate||''} • ${e.total_deliveries||0} entregas</div>
+        ${e.phone?`<div class="text-gray" style="font-size:12px;">📱 ${e.phone}</div>`:''}
+      </div>
+    </div>
+    <div class="flex gap-8">
+      <span class="badge badge-${e.status}">${e.status==='available'?'Disponível':e.status==='busy'?'Ocupado':'Offline'}</span>
+      <button class="btn btn-sm btn-outline" onclick="toggleEntLoja(${e.id},'${e.status}')">${e.status==='offline'?'Ativar':'Desativar'}</button>
+    </div>
+  </div>`).join('');
+}
+
+async function toggleEntLoja(id,status){
+  const newStatus=status==='offline'?'available':'offline';
+  await sb.from('pb_deliverers').update({status:newStatus}).eq('id',id);
+  toast('Status do entregador atualizado','info');
+  loadEntregadoresLoja();
+}
+
+async function renderRelatorio(){
+  const today=new Date().toISOString().split('T')[0];
+  const {data:orders}=await sb.from('pb_orders').select('*').gte('created_at',today).order('created_at');
+  const hourly=Array(24).fill(0);
+  (orders||[]).forEach(o=>{
+    const h=new Date(o.created_at).getHours();
+    hourly[h]++;
+  });
+  const maxH=Math.max(...hourly,1);
+  const chartEl=document.getElementById('bar-chart');
+  const hours=[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+  chartEl.innerHTML=hours.map(h=>`
+  <div class="bar-wrap">
+    <div class="bar-value">${hourly[h]||0}</div>
+    <div class="bar" style="height:${Math.max(4,(hourly[h]/maxH)*110)}px;width:100%;"></div>
+    <div class="bar-label">${h}h</div>
+  </div>`).join('');
+  const el=document.getElementById('relatorio-list');
+  if(!orders?.length){ el.innerHTML='<p class="text-gray">Nenhum pedido hoje.</p>'; return; }
+  el.innerHTML=orders.map(o=>`
+  <div class="card-sm flex-between" style="margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+    <div><span style="font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);">${o.order_number}</span> — ${o.customer_name||''}</div>
+    <div class="flex gap-8"><span class="badge badge-${o.status}">${statusLabel(o.status)}</span><span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(o.total||0)}</span></div>
+  </div>`).join('');
+  const fat=orders.filter(o=>o.status!=='cancelled').reduce((a,b)=>a+(b.total||0),0);
+  const ticket=orders.length?fat/orders.length:0;
+  const cancel=orders.filter(o=>o.status==='cancelled').length;
+  document.getElementById('relatorio-footer').innerHTML=`
+  <div class="row" style="gap:20px;flex-wrap:wrap;">
+    <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-number">R$ ${fmtMoney(fat)}</div><div class="stat-label">Total Faturado</div></div>
+    <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-number">R$ ${fmtMoney(ticket)}</div><div class="stat-label">Ticket Médio</div></div>
+    <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-number" style="color:var(--red)">${cancel}</div><div class="stat-label">Cancelados</div></div>
+    <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-number">${orders.length}</div><div class="stat-label">Total de Pedidos</div></div>
+  </div>`;
+}
+
+function startLojaPolling(){
+  if(lojaPolling) clearInterval(lojaPolling);
+  lojaPolling=setInterval(()=>{ if(storeAuth&&document.getElementById('loja-tab-kanban').style.display!=='none'){ renderKanban(); updateMetrics(); } },10000);
+}
+
+// ============ UTILS ============
+async function generateOrderNumber(){
+  const {data}=await sb.from('pb_orders').select('id').order('id',{ascending:false}).limit(1);
+  const nextId=data?.length?data[0].id+1:1;
+  return '#'+String(nextId).padStart(4,'0');
+}
+
+function startPolling(fn,ms){ fn(); return setInterval(fn,ms); }
+
+function fmtMoney(v){ return Number(v).toFixed(2).replace('.',','); }
+function fmtDate(d){ if(!d)return''; return new Date(d).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
+function statusLabel(s){
+  const m={received:'Recebido',preparing:'Preparando',on_the_way:'A Caminho',delivered:'Entregue',cancelled:'Cancelado'};
+  return m[s]||s;
+}
+</script>
+</body>
+</html>
