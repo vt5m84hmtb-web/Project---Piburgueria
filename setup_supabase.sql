@@ -157,6 +157,9 @@ ALTER TABLE pb_orders
 ADD COLUMN IF NOT EXISTS deliverer_confirmed boolean DEFAULT false;
 
 ALTER TABLE pb_orders
+ADD COLUMN IF NOT EXISTS mp_payment_id text;
+
+ALTER TABLE pb_orders
 ADD COLUMN IF NOT EXISTS customer_confirmed boolean DEFAULT false;
 
 -- ============================================================

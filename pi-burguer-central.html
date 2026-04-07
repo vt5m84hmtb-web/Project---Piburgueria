@@ -997,8 +997,9 @@ function renderTimeline(order){
   <div class="divider"></div>
   <div class="flex-between">
     <span class="text-gray" style="font-size:13px;">Pagamento: <strong>${order.payment_method||'-'}</strong></span>
-    <span class="badge badge-${order.payment_status||'pending'}">${order.payment_status==='confirmed'?'Pago':'Pendente'}</span>
+    <span class="badge badge-${['confirmed','paid'].includes(order.payment_status)?'confirmed':(order.payment_status||'pending')}">${['confirmed','paid'].includes(order.payment_status)?'Pago':'Pendente'}</span>
   </div>
+  ${order.mp_payment_id?`<div class="mt-8"><span class="text-gray" style="font-size:13px;">ID do pagamento: <strong>${order.mp_payment_id}</strong></span></div>`:''}
   ${order.customer_address?`<div class="flex gap-8 mt-8"><span style="font-size:13px;">📍 ${order.customer_address}</span></div>`:''}
   </div>
   <div class="sync-indicator mt-8" style="justify-content:center;">
@@ -1478,7 +1479,7 @@ async function updateMetrics(){
 }
 
 async function renderKanban(){
-  const statuses=['received','preparing','on_the_way','delivered'];
+  const statuses=['received','paid','preparing','on_the_way','delivered'];
   const {data:orders}=await sb.from('pb_orders').select('*').in('status',statuses).order('created_at',{ascending:true});
   statuses.forEach(s=>{
     const col=document.getElementById('col-'+s);
@@ -1496,7 +1497,7 @@ function renderKanbanCard(o){
   const timerCls=mins>=20?'warn':'ok';
   const preview=items.slice(0,2).map(i=>`${i.quantity||1}x ${i.name}`).join(', ')+(items.length>2?` +${items.length-2}`:'');
   let actions='';
-  if(o.status==='received'){
+  if(o.status==='received' || o.status==='paid'){
     actions=`<div class="row" style="gap:6px;margin-top:8px;">
       <button class="btn btn-sm" onclick="aceitarPedidoLoja(${o.id})">Aceitar</button>
       <button class="btn btn-sm btn-danger" onclick="recusarPedido(${o.id})">Recusar</button>
@@ -1518,9 +1519,9 @@ function renderKanbanCard(o){
     <div class="order-items-preview">${preview}</div>
     <div class="flex-between">
       <span class="text-gold" style="font-size:13px;font-weight:700;">R$ ${fmtMoney(o.total||0)}</span>
-      <span class="badge badge-${o.payment_status||'pending'}">${o.payment_status==='confirmed'?'Pago':'Pendente'}</span>
+      <span class="badge badge-${['confirmed','paid'].includes(o.payment_status)?'confirmed':(o.payment_status||'pending')}">${['confirmed','paid'].includes(o.payment_status)?'Pago':'Pendente'}</span>
     </div>
-    ${actions}
+    ${o.mp_payment_id?`<div style="font-size:12px;color:var(--gray2);margin-top:6px;">ID: ${o.mp_payment_id}</div>`:''}\n    ${actions}
   </div>`;
 }
 
@@ -1725,7 +1726,7 @@ function fmtMoney(v){ return Number(v).toFixed(2).replace('.',','); }
 function fmtDate(d){ if(!d)return''; return new Date(d).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
 
 function statusLabel(s){
-  const m={received:'Recebido',preparing:'Preparando',on_the_way:'A Caminho',delivered:'Entregue',cancelled:'Cancelado'};
+  const m={received:'Recebido',paid:'Pago',preparing:'Preparando',on_the_way:'A Caminho',delivered:'Entregue',cancelled:'Cancelado'};
   return m[s]||s;
 }
 </script>
