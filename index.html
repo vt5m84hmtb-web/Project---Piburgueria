@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -41,7 +41,7 @@
     .logo-text h1{font-family:'Bebas Neue',sans-serif;transform:translateY(5px);margin-bottom:-5px;font-size:20px;letter-spacing:2px;line-height:1;color:var(--white);}
     .logo-text span{font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;font-weight:700;}
     .header-search{flex:1;position:relative;}
-    .header-search input{width:100%;background:var(--navy3);border:1.5px solid rgba(245,166,35,.2);border-radius:12px;padding:9px 14px 9px 38px;color:var(--white);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+    .header-search input{width:100%;background:var(--navy3);display:none;border:1.5px solid rgba(245,166,35,.2);border-radius:12px;padding:9px 14px 9px 38px;color:var(--white);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
     .header-search input::placeholder{color:var(--gray);}
     .header-search input:focus{border-color:var(--gold);}
     .search-ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray);font-size:14px;pointer-events:none;}
@@ -416,7 +416,7 @@
       </div>
     </div>
     <div class="header-search">
-      <span class="search-ic">🔍</span>
+      <span class="search-ic"></span>
       <input type="text" placeholder="Buscar no cardápio" oninput="filterMenu(this.value)" id="search-input" />
     </div>
     <button class="cart-header-btn" onclick="openCart()">
