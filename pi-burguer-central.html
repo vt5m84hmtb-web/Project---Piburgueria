@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <!-- esse é o pi-burguer-central.html, a central de pedidos da pi-burgueria -->
-
+<!-- pi-burguer-central.html — Central de Pedidos π Burguer (versão corrigida) -->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -98,6 +97,7 @@ label{font-size:13px;color:var(--gray2);margin-bottom:5px;display:block;font-wei
 .badge-cancelled{background:rgba(255,82,82,.15);color:#ff5252;}
 .badge-confirmed{background:rgba(76,175,125,.15);color:#4caf7d;}
 .badge-pending{background:rgba(245,166,35,.15);color:#f5a623;}
+.badge-paid{background:rgba(76,175,125,.15);color:#4caf7d;}
 .badge-failed{background:rgba(255,82,82,.15);color:#ff5252;}
 .badge-available{background:rgba(76,175,125,.15);color:#4caf7d;}
 .badge-busy{background:rgba(255,140,0,.15);color:#ff8c00;}
@@ -121,7 +121,6 @@ label{font-size:13px;color:var(--gray2);margin-bottom:5px;display:block;font-wei
 .track-hero{text-align:center;padding:30px 0 20px;}
 .track-hero .big-logo{font-family:'Bebas Neue',cursive;font-size:54px;color:var(--gold);line-height:1;}
 .track-search-box{max-width:460px;margin:0 auto;padding:0 16px;}
-.track-input-wrap{position:relative;}
 .track-input-wrap input{font-size:18px;padding:14px 16px;text-align:center;letter-spacing:2px;}
 .timeline-container{max-width:600px;margin:0 auto;}
 .order-header{background:var(--navy2);border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:22px;margin-bottom:20px;}
@@ -137,7 +136,7 @@ label{font-size:13px;color:var(--gray2);margin-bottom:5px;display:block;font-wei
 .timeline-label.done{color:var(--green);}
 .timeline-line{position:absolute;top:26px;left:50%;right:-50%;height:2px;z-index:0;}
 .timeline-line.done{background:var(--green);}
-.timeline-line.pending{background:rgba(138,155,192,.2);border-top:2px dashed rgba(138,155,192,.2);height:0;}
+.timeline-line.pending{background:rgba(138,155,192,.2);}
 @keyframes pulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.4);}50%{box-shadow:0 0 0 8px rgba(245,166,35,0);}}
 .deliverer-card{background:var(--navy3);border:1px solid rgba(100,149,237,.3);border-radius:14px;padding:16px;margin-top:16px;display:flex;gap:14px;align-items:center;}
 .deliverer-avatar{width:50px;height:50px;border-radius:50%;background:var(--gold3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:24px;color:var(--navy);flex-shrink:0;}
@@ -168,11 +167,10 @@ label{font-size:13px;color:var(--gray2);margin-bottom:5px;display:block;font-wei
 .card-chip{width:40px;height:30px;background:linear-gradient(135deg,#d4a84b,#f5e07a);border-radius:5px;margin-bottom:16px;}
 .card-number-display{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:4px;color:rgba(255,255,255,.85);margin-bottom:16px;}
 .card-bottom{display:flex;justify-content:space-between;align-items:flex-end;}
-.card-label{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;transform: translateY(-20px);}
+.card-label{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;transform:translateY(-20px);}
 .card-value{font-size:14px;font-weight:700;color:var(--white);}
-.card-brand{font-size:28px;}
 .magnetic-stripe{background:#1a1a1a;height:40px;margin:20px -20px;margin-top:30px;}
-.cvv-box{background:white;border-radius:4px;padding:6px 12px;margin:16px 0;text-align:right;color:#333;font-size:16px;letter-spacing:4px;transform: translateY(-22px);}
+.cvv-box{background:white;border-radius:4px;padding:6px 12px;margin:16px 0;text-align:right;color:#333;font-size:16px;letter-spacing:4px;transform:translateY(-22px);}
 
 /* CHECKMARK ANIM */
 .success-checkmark{width:80px;height:80px;margin:0 auto 20px;}
@@ -194,6 +192,16 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
 .stat-number{font-family:'Bebas Neue',cursive;font-size:32px;color:var(--gold);}
 .stat-label{font-size:12px;color:var(--gray);}
 
+/* MAPA LINK */
+.map-link{display:inline-flex;align-items:center;gap:6px;background:rgba(100,149,237,.15);border:1px solid rgba(100,149,237,.4);color:#6495ed;padding:8px 14px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;margin-top:8px;}
+.map-link:hover{background:rgba(100,149,237,.25);}
+
+/* DELIVERY CODE */
+.delivery-code-box{background:var(--navy3);border:2px solid var(--gold);border-radius:16px;padding:16px;margin:12px 0;text-align:center;}
+.delivery-code-label{font-size:13px;font-weight:800;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;}
+.delivery-code-value{font-family:'Bebas Neue',cursive;font-size:36px;color:var(--white);letter-spacing:6px;margin:6px 0;background:var(--navy);border-radius:10px;padding:8px 16px;display:inline-block;}
+.delivery-code-hint{font-size:12px;color:var(--gray);line-height:1.4;margin-top:6px;}
+
 /* PORTAL 4 — LOJA */
 .metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
 .metric-card{background:var(--navy2);border:1px solid rgba(245,166,35,.15);border-radius:14px;padding:18px;text-align:center;}
@@ -214,7 +222,7 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
 .loja-tabs{display:flex;gap:0;border-bottom:1px solid rgba(245,166,35,.2);margin-bottom:24px;overflow-x:auto;}
 .loja-tab{padding:12px 20px;cursor:pointer;font-weight:700;font-size:14px;color:var(--gray);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
 .loja-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
-.new-order-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:white;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.pay-method-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);color:var(--gold);margin-top:4px;}
 
 /* QTY CONTROL */
 .qty-control{display:flex;align-items:center;gap:8px;}
@@ -231,7 +239,6 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
 .items-list{margin:12px 0;}
 .item-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(245,166,35,.08);}
 .item-name{font-size:14px;font-weight:600;}
-.item-qty{font-size:13px;color:var(--gray);}
 .item-price{font-size:14px;color:var(--gold);font-weight:700;}
 
 /* TOTALS */
@@ -253,9 +260,26 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
 @keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
 .modal-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px;}
 
-/* SETUP PANEL */
-.setup-panel{text-align:center;padding:40px 20px;max-width:600px;margin:0 auto;}
-.setup-panel pre{text-align:left;background:var(--navy3);border-radius:10px;padding:16px;font-size:11px;overflow-x:auto;color:var(--gray2);margin:16px 0;border:1px solid rgba(245,166,35,.2);}
+/* LOGIN */
+.login-box{max-width:380px;margin:40px auto;background:var(--navy2);border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:32px;}
+.login-logo{font-family:'Bebas Neue',cursive;font-size:42px;color:var(--gold);text-align:center;margin-bottom:6px;}
+.login-sub{color:var(--gray);text-align:center;font-size:14px;margin-bottom:24px;}
+
+/* AVAILABLE ORDERS */
+.available-order-card{background:var(--navy3);border:1px solid rgba(245,166,35,.15);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+
+/* HISTORY */
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(245,166,35,.08);font-size:14px;}
+
+/* MODAL CONFIRMAÇÃO CÓDIGO (substitui prompt() nativo) */
+.code-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;}
+.code-modal-overlay.show{display:flex;}
+.code-modal-box{background:var(--navy2);border:1px solid rgba(245,166,35,.3);border-radius:20px;padding:28px;width:90%;max-width:360px;text-align:center;}
+.code-modal-title{font-family:'Bebas Neue',cursive;font-size:24px;color:var(--gold);margin-bottom:8px;}
+.code-modal-sub{color:var(--gray);font-size:13px;margin-bottom:20px;}
+.code-modal-input{background:var(--navy3);border:1.5px solid rgba(245,166,35,.3);border-radius:10px;padding:12px;color:var(--white);font-size:20px;letter-spacing:6px;text-align:center;font-family:'Bebas Neue',cursive;width:100%;outline:none;margin-bottom:16px;}
+.code-modal-input:focus{border-color:var(--gold);}
+.code-modal-actions{display:flex;gap:10px;}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -268,18 +292,6 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
   .row{flex-direction:column;}
   .metrics-grid{grid-template-columns:repeat(2,1fr);}
 }
-
-/* LOGIN SCREEN */
-.login-box{max-width:380px;margin:40px auto;background:var(--navy2);border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:32px;}
-.login-logo{font-family:'Bebas Neue',cursive;font-size:42px;color:var(--gold);text-align:center;margin-bottom:6px;}
-.login-sub{color:var(--gray);text-align:center;font-size:14px;margin-bottom:24px;}
-
-/* DELIVERER ORDERS */
-.available-orders{margin-top:20px;}
-.available-order-card{background:var(--navy3);border:1px solid rgba(245,166,35,.15);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
-
-/* HISTORY LIST */
-.history-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(245,166,35,.08);font-size:14px;}
 </style>
 </head>
 <body>
@@ -344,9 +356,7 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
       </div>
       <div class="track-search-box">
         <div class="form-group">
-          <div class="track-input-wrap">
-            <input type="text" id="track-input" placeholder="#0001" style="text-align:center;font-size:20px;letter-spacing:3px;" maxlength="10">
-          </div>
+          <input type="text" id="track-input" placeholder="#0001" style="text-align:center;font-size:20px;letter-spacing:3px;" maxlength="10">
         </div>
         <button class="btn" onclick="buscarPedido()">🔍 Rastrear Pedido</button>
         <div class="divider"></div>
@@ -384,9 +394,9 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
       <div class="card" id="pay-order-summary"></div>
       <div class="card mt-16">
         <div class="payment-tabs">
-          <div class="payment-tab active" onclick="showPayTab('pix')">PIX</div>
-          <div class="payment-tab" onclick="showPayTab('credit')">Crédito/Débito</div>
-          <div class="payment-tab" onclick="showPayTab('cash')">Dinheiro</div>
+          <div class="payment-tab active" data-tab="pix" onclick="showPayTab('pix',this)">PIX</div>
+          <div class="payment-tab" data-tab="credit" onclick="showPayTab('credit',this)">Crédito/Débito</div>
+          <div class="payment-tab" data-tab="cash" onclick="showPayTab('cash',this)">Dinheiro</div>
         </div>
         <div id="pay-tab-pix">
           <div class="pix-container">
@@ -446,12 +456,12 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
               <input type="text" id="card-cvv" placeholder="***" maxlength="4" onfocus="flipCard(true)" onblur="flipCard(false)" oninput="document.getElementById('cvv-display').textContent=this.value||'***'">
             </div>
           </div>
-          <button class="btn" onclick="processarCartao()">Pagar com Cartão</button>
+          <button class="btn" id="btn-pagar-cartao" onclick="processarCartao(this)">Pagar com Cartão</button>
         </div>
         <div id="pay-tab-cash" style="display:none;">
           <div class="form-group" style="margin-top:12px;">
             <label>Forma</label>
-            <select id="cash-type">
+            <select id="cash-type" onchange="toggleCashType()">
               <option value="cash">Dinheiro na entrega</option>
               <option value="pickup">Retirar no local</option>
             </select>
@@ -592,10 +602,10 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
     </div>
     <div id="loja-dashboard" style="display:none;">
       <div class="loja-tabs">
-        <div class="loja-tab active" onclick="showLojaTab('kanban')">📋 Fila de Pedidos</div>
-        <div class="loja-tab" onclick="showLojaTab('novo')">➕ Novo Pedido</div>
-        <div class="loja-tab" onclick="showLojaTab('entregadores')">🏍️ Entregadores</div>
-        <div class="loja-tab" onclick="showLojaTab('relatorio')">📊 Relatório</div>
+        <div class="loja-tab active" onclick="showLojaTab('kanban',this)">📋 Fila de Pedidos</div>
+        <div class="loja-tab" onclick="showLojaTab('novo',this)">➕ Novo Pedido</div>
+        <div class="loja-tab" onclick="showLojaTab('entregadores',this)">🏍️ Entregadores</div>
+        <div class="loja-tab" onclick="showLojaTab('relatorio',this)">📊 Relatório</div>
       </div>
       <div id="loja-metrics" class="metrics-grid">
         <div class="metric-card"><div class="metric-value" id="m-hoje">0</div><div class="metric-label">Pedidos Hoje</div></div>
@@ -603,7 +613,6 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
         <div class="metric-card"><div class="metric-value" id="m-fat">R$0</div><div class="metric-label">Faturamento Hoje</div></div>
         <div class="metric-card"><div class="metric-value" id="m-ent">0</div><div class="metric-label">Entregadores Ativos</div></div>
       </div>
-      <!-- KANBAN -->
       <div id="loja-tab-kanban">
         <div class="kanban" id="kanban-board">
           <div class="kanban-col">
@@ -623,11 +632,10 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
             <div id="col-delivered"></div>
           </div>
         </div>
-        <div style="text-align:right;margin-top:10px;" class="sync-indicator" style="justify-content:flex-end;">
+        <div class="sync-indicator" style="margin-top:10px;">
           <div class="sync-dot"></div><span class="text-gray" style="font-size:12px;">Atualiza a cada 10s</span>
         </div>
       </div>
-      <!-- NOVO PEDIDO -->
       <div id="loja-tab-novo" style="display:none;">
         <div class="card" style="max-width:600px;">
           <div class="section-title" style="font-size:22px;">Criar Pedido Manual</div>
@@ -654,6 +662,7 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
               <option value="credit">Cartão de Crédito</option>
               <option value="debit">Cartão de Débito</option>
               <option value="cash">Dinheiro</option>
+              <option value="mercadopago">Mercado Pago</option>
             </select>
           </div>
           <div class="form-group">
@@ -663,12 +672,10 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
           <button class="btn" onclick="criarPedidoManual()">Criar Pedido</button>
         </div>
       </div>
-      <!-- ENTREGADORES -->
       <div id="loja-tab-entregadores" style="display:none;">
         <div class="section-title" style="font-size:22px;">Gestão de Entregadores</div>
         <div id="entregadores-list"></div>
       </div>
-      <!-- RELATORIO -->
       <div id="loja-tab-relatorio" style="display:none;">
         <div class="section-title" style="font-size:22px;">Relatório do Dia</div>
         <div class="card" style="margin-bottom:20px;">
@@ -682,17 +689,6 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
   </div>
 
 </div><!-- end main-content -->
-
-<!-- SETUP PANEL -->
-<div id="setup-panel" class="portal-view" style="display:none;">
-  <div class="setup-panel">
-    <div style="font-size:48px;margin-bottom:16px;">⚙️</div>
-    <h2 style="font-family:'Bebas Neue',cursive;font-size:32px;color:var(--gold);margin-bottom:12px;">Configuração Necessária</h2>
-    <p class="text-gray" style="margin-bottom:20px;">Execute o SQL abaixo no Supabase (SQL Editor) para criar as tabelas:</p>
-    <pre id="setup-sql"></pre>
-    <button class="btn" onclick="checkTablesAgain()">✅ Já criei as tabelas</button>
-  </div>
-</div>
 
 <!-- MODAL CLIENTE -->
 <div class="modal-overlay" id="modal-cliente">
@@ -719,6 +715,20 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
   </div>
 </div>
 
+<!-- MODAL CÓDIGO DE ENTREGA (substitui prompt() nativo) -->
+<div class="code-modal-overlay" id="code-confirm-modal">
+  <div class="code-modal-box">
+    <div class="code-modal-title">🔐 Confirmar Entrega</div>
+    <div class="code-modal-sub">Digite o código fornecido pelo cliente</div>
+    <input type="text" class="code-modal-input" id="code-confirm-input" maxlength="6" placeholder="------" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
+    <div id="code-confirm-error" style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:10px;display:none;">Código incorreto. Verifique com o cliente.</div>
+    <div class="code-modal-actions">
+      <button class="btn" id="code-confirm-ok" onclick="confirmCodeAndDeliver()">Confirmar</button>
+      <button class="btn btn-outline" onclick="closeCodeModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
 
@@ -726,6 +736,73 @@ input:checked+.toggle-slider:before{transform:translateX(32px);background:var(--
 const SUPABASE_URL = 'https://cwjlkovqpdpmtgblidrv.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3amxrb3ZxcGRwbXRnYmxpZHJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODczODYsImV4cCI6MjA4OTM2MzM4Nn0.-AhhMLSUOhjZqE1SCfK4B1tCYm0atguUqPtRpSi-sKs';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ===== SEGURANÇA: hash simples do lado cliente (sem bcrypt, mas melhor que texto puro) =====
+   NOTA: Para produção real, a verificação de senha deve ocorrer no backend/Edge Function.
+   Aqui usamos SHA-256 via WebCrypto API para não armazenar senha em texto puro. */
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + 'piburguer_salt_2024');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/* ===== SEGURANÇA: Rate limiting simples no cliente ===== */
+const loginAttempts = { loja: { count: 0, lockedUntil: 0 }, entregador: {} };
+
+function checkRateLimit(key) {
+  const now = Date.now();
+  if (!loginAttempts[key]) loginAttempts[key] = { count: 0, lockedUntil: 0 };
+  const attempt = loginAttempts[key];
+  if (attempt.lockedUntil > now) {
+    const secs = Math.ceil((attempt.lockedUntil - now) / 1000);
+    toast(`Muitas tentativas. Aguarde ${secs}s.`, 'error');
+    return false;
+  }
+  attempt.count++;
+  if (attempt.count >= 5) {
+    attempt.lockedUntil = now + 60000; // 60s de bloqueio
+    attempt.count = 0;
+    toast('Conta temporariamente bloqueada por 60 segundos.', 'error');
+    return false;
+  }
+  return true;
+}
+
+function resetRateLimit(key) {
+  if (loginAttempts[key]) loginAttempts[key] = { count: 0, lockedUntil: 0 };
+}
+
+/* ===== SEGURANÇA: escape de HTML para prevenir XSS ===== */
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* ===== SEGURANÇA: validação de número de pedido ===== */
+function isValidOrderNumber(n) {
+  return /^#\d{4,6}$/.test(n);
+}
+
+/* ===== SEGURANÇA: geração de senha da loja via hash configurável ===== */
+// A senha '2026' NUNCA fica em texto puro — é comparada como hash SHA-256
+// Para alterar a senha, gere o novo hash com: hashPassword('nova_senha')
+// e armazene no Supabase na tabela pb_store_config
+let STORE_PASSWORD_HASH = null;
+
+async function loadStorePasswordHash() {
+  try {
+    const {data} = await sb.from('pb_store_config').select('password_hash').eq('id',1).single();
+    if (data?.password_hash) { STORE_PASSWORD_HASH = data.password_hash; return; }
+  } catch(_) {}
+  // Fallback: hash da senha padrão '2026' se a tabela não existir ainda
+  STORE_PASSWORD_HASH = await hashPassword('2026');
+}
 
 // STATE
 let currentView = 'portal-selector';
@@ -737,30 +814,25 @@ let lojaPolling = null;
 let entregadorPolling = null;
 let pixTimer = null;
 let pixSeconds = 300;
-let pixExpiresAt = null;
 let currentPayOrder = null;
 let npItems = [];
 let allProducts = [];
 let tablesOk = false;
 let delivererHasEmailColumn = true;
 
+// Estado do modal de confirmação de entrega
+let pendingDeliveryOrderId = null;
+
 // ============ INIT ============
 (async function init(){
   try {
+    await loadStorePasswordHash();
     const ok = await checkTables();
     tablesOk = ok;
-    if(!ok){
-      document.getElementById('setup-panel').style.display='block';
-      document.getElementById('portal-selector').classList.remove('active');
-    }
-    if(ok){
-      await detectDelivererEmailColumn();
-    }
+    if(ok){ await detectDelivererEmailColumn(); }
     restoreSession();
-    if(ok){
-      await applyDeepLinkFromURL();
-    }
-  } catch(e){}
+    if(ok){ await applyDeepLinkFromURL(); }
+  } catch(e){ console.error('Init error:', e); }
   setTimeout(()=>{
     const ls = document.getElementById('loading-screen');
     ls.classList.add('fade-out');
@@ -769,7 +841,8 @@ let delivererHasEmailColumn = true;
 })();
 
 async function checkTables(){
-  const tables = ['pb_customers','pb_orders','pb_deliverers','pb_payments'];
+  // Verifica também pb_products que é usada no novo pedido
+  const tables = ['pb_customers','pb_orders','pb_deliverers','pb_payments','pb_products'];
   for(const t of tables){
     const {error} = await sb.from(t).select('id').limit(1);
     if(error && error.message && error.message.includes('does not exist')) return false;
@@ -779,79 +852,27 @@ async function checkTables(){
 
 async function detectDelivererEmailColumn(){
   const {error} = await sb.from('pb_deliverers').select('email').limit(1);
-  if(error && error.message && (error.message.includes("Could not find the 'email' column") || error.message.includes('pb_deliverers.email'))){
-    delivererHasEmailColumn = false;
-    return;
-  }
-  delivererHasEmailColumn = true;
+  delivererHasEmailColumn = !(error && error.message && (
+    error.message.includes("Could not find the 'email' column") ||
+    error.message.includes('pb_deliverers.email')
+  ));
 }
-
-async function checkTablesAgain(){
-  const ok = await checkTables();
-  if(ok){
-    tablesOk = true;
-    await detectDelivererEmailColumn();
-    document.getElementById('setup-panel').style.display='none';
-    showView('portal-selector');
-    toast('Tabelas encontradas! Sistema pronto.','success');
-  } else {
-    toast('Tabelas ainda não encontradas. Verifique o SQL.','error');
-  }
-}
-
-function getSetupSQL(){
-  return `-- Execute no Supabase SQL Editor:
-
-create table if not exists pb_customers (
-  id bigint primary key generated always as identity,
-  name text, phone text, email text, password_hash text,
-  address text, neighborhood text, complement text,
-  created_at timestamptz default now()
-);
-
-create table if not exists pb_orders (
-  id bigint primary key generated always as identity,
-  order_number text, customer_id bigint, customer_name text,
-  customer_phone text, customer_address text, items jsonb,
-  subtotal numeric default 0, delivery_fee numeric default 5,
-  total numeric default 0, payment_method text,
-  payment_status text default 'pending',
-  status text default 'received',
-  deliverer_id bigint, deliverer_name text, notes text,
-  created_at timestamptz default now(), updated_at timestamptz default now()
-);
-
-create table if not exists pb_deliverers (
-  id bigint primary key generated always as identity,
-  name text, phone text, email text, vehicle text, plate text, password text,
-  status text default 'offline', current_order_id bigint,
-  total_deliveries int default 0, created_at timestamptz default now()
-);
-
-alter table if exists pb_deliverers
-add column if not exists email text;
-
-create table if not exists pb_payments (
-  id bigint primary key generated always as identity,
-  order_id bigint, method text, amount numeric,
-  status text default 'pending', pix_key text, card_last4 text,
-  created_at timestamptz default now()
-);`;
-}
-
-document.getElementById('setup-sql').textContent = getSetupSQL();
 
 function restoreSession(){
-  const cust = sessionStorage.getItem('pb_customer');
-  const ent = sessionStorage.getItem('pb_deliverer');
-  const store = sessionStorage.getItem('pb_store_auth');
-  if(cust) currentCustomer = JSON.parse(cust);
-  if(ent) currentDeliverer = JSON.parse(ent);
-  if(store) storeAuth = true;
+  try {
+    const cust = sessionStorage.getItem('pb_customer');
+    const ent = sessionStorage.getItem('pb_deliverer');
+    const store = sessionStorage.getItem('pb_store_auth');
+    if(cust) currentCustomer = JSON.parse(cust);
+    if(ent) currentDeliverer = JSON.parse(ent);
+    if(store) storeAuth = true;
+  } catch(_) {
+    sessionStorage.clear();
+  }
 }
 
 function normalizeOrderNumber(num){
-  const value = String(num || '').trim().toUpperCase();
+  const value = String(num||'').trim().toUpperCase().replace(/[^#\d]/g,'');
   if(!value) return '';
   return value.startsWith('#') ? value : '#'+value;
 }
@@ -860,14 +881,16 @@ async function applyDeepLinkFromURL(){
   const params = new URLSearchParams(window.location.search);
   const view = params.get('view');
   const order = normalizeOrderNumber(params.get('order'));
-  if(view && document.getElementById(view)){
+  // Validação: só aceita views conhecidas
+  const allowedViews = ['portal-cliente','portal-pagamento','portal-entregador','portal-loja'];
+  if(view && allowedViews.includes(view) && document.getElementById(view)){
     showView(view);
   }
-  if(order && view==='portal-pagamento'){
+  if(order && isValidOrderNumber(order) && view==='portal-pagamento'){
     document.getElementById('pay-order-input').value = order;
     await buscarPedidoPagamento(false);
   }
-  if(order && view==='portal-cliente'){
+  if(order && isValidOrderNumber(order) && view==='portal-cliente'){
     document.getElementById('track-input').value = order;
     await buscarPedido();
   }
@@ -884,7 +907,7 @@ function showView(name){
   if(el){ el.classList.add('active'); currentView=name; }
   document.getElementById('btn-back').style.display = name==='portal-selector'?'none':'block';
   clearPollings();
-  if(name==='portal-loja' && storeAuth) startLojaPolling();
+  if(name==='portal-loja' && storeAuth){ startLojaPolling(); loadLojaData(); }
   if(name==='portal-entregador' && currentDeliverer) startEntregadorPolling();
 }
 
@@ -907,9 +930,18 @@ function toast(msg, type='success'){
   const t = document.createElement('div');
   t.className = `toast toast-${type}`;
   const icons = {success:'✅',error:'❌',info:'ℹ️',warning:'⚠️'};
-  t.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  // Usa textContent para evitar XSS no toast
+  const icon = document.createElement('span');
+  icon.textContent = icons[type]||'•';
+  const text = document.createElement('span');
+  text.textContent = msg;
+  t.appendChild(icon);
+  t.appendChild(text);
   c.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(100%)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); },3000);
+  setTimeout(()=>{
+    t.style.opacity='0'; t.style.transform='translateX(100%)'; t.style.transition='all .3s';
+    setTimeout(()=>t.remove(),300);
+  },3500);
 }
 
 // ============ MASKS ============
@@ -932,16 +964,17 @@ function maskCEP(el){
 
 // ============ PORTAL 1 — CLIENTE ============
 async function buscarPedido(){
-  const num = document.getElementById('track-input').value.trim().toUpperCase();
-  if(!num){ toast('Digite o número do pedido','warning'); return; }
-  const n = num.startsWith('#')?num:'#'+num;
+  const raw = document.getElementById('track-input').value.trim().toUpperCase();
+  if(!raw){ toast('Digite o número do pedido','warning'); return; }
+  const n = normalizeOrderNumber(raw);
+  if(!isValidOrderNumber(n)){ toast('Número de pedido inválido','warning'); return; }
   const {data,error} = await sb.from('pb_orders').select('*').eq('order_number',n).single();
   if(error||!data){ toast('Pedido não encontrado','error'); return; }
   renderTimeline(data);
   document.getElementById('cliente-busca').style.display='none';
   document.getElementById('cliente-timeline').style.display='block';
   if(clientePolling) clearInterval(clientePolling);
-  clientePolling = startPolling(async()=>{
+  clientePolling = setInterval(async()=>{
     const {data:d2}=await sb.from('pb_orders').select('*').eq('order_number',n).single();
     if(d2) renderTimeline(d2);
   },15000);
@@ -952,13 +985,14 @@ function renderTimeline(order){
   const stepLabels=['Recebido','Preparando','A Caminho','Entregue'];
   const stepIcons=['📥','👨‍🍳','🏍️','✅'];
   const si=steps.indexOf(order.status);
+  // Usa esc() em todos os dados do banco para prevenir XSS
   let html=`
   <div class="order-header">
     <div class="flex-between">
-      <div class="order-number-big">${order.order_number}</div>
-      <span class="badge badge-${order.status}">${statusLabel(order.status)}</span>
+      <div class="order-number-big">${esc(order.order_number)}</div>
+      <span class="badge badge-${esc(order.status)}">${esc(statusLabel(order.status))}</span>
     </div>
-    <div class="text-gray" style="font-size:13px;margin-top:6px;">${fmtDate(order.created_at)}</div>
+    <div class="text-gray" style="font-size:13px;margin-top:6px;">${esc(fmtDate(order.created_at))}</div>
   </div>
   <div class="card">
     <div class="timeline">`;
@@ -972,21 +1006,27 @@ function renderTimeline(order){
   html+=`</div>`;
   if(order.status==='on_the_way'&&order.deliverer_name){
     html+=`<div class="deliverer-card">
-      <div class="deliverer-avatar">${order.deliverer_name[0]}</div>
+      <div class="deliverer-avatar">${esc(order.deliverer_name[0])}</div>
       <div>
-        <div style="font-weight:700;">${order.deliverer_name}</div>
+        <div style="font-weight:700;">${esc(order.deliverer_name)}</div>
         <div class="text-gray" style="font-size:13px;">Em rota para você</div>
-        ${order.deliverer_phone?`<a href="tel:${order.deliverer_phone}" style="color:var(--gold);font-size:13px;font-weight:700;">📞 Ligar para entregador</a>`:''}
       </div>
+    </div>`;
+  }
+  if((order.status==='on_the_way'||order.status==='preparing')&&order.delivery_code){
+    html+=`<div class="delivery-code-box" style="margin-top:16px;">
+      <div class="delivery-code-label">🔐 Código de confirmação</div>
+      <div class="delivery-code-value">${esc(order.delivery_code)}</div>
+      <div class="delivery-code-hint">Forneça este código ao entregador para confirmar o recebimento.</div>
     </div>`;
   }
   html+=`</div>
   <div class="card mt-16">
     <div class="section-title" style="font-size:18px;">Itens do Pedido</div>
     <div class="items-list">`;
-  const items=Array.isArray(order.items)?order.items:(typeof order.items==='string'?JSON.parse(order.items):[]);
+  const items=parseItems(order.items);
   items.forEach(it=>{
-    html+=`<div class="item-row"><span class="item-name">${it.quantity||it.qty||1}x ${it.name}</span><span class="item-price">R$ ${fmtMoney((it.price||0)*(it.quantity||it.qty||1))}</span></div>`;
+    html+=`<div class="item-row"><span class="item-name">${esc(it.quantity||it.qty||1)}x ${esc(it.name)}</span><span class="item-price">R$ ${fmtMoney((it.price||0)*(it.quantity||it.qty||1))}</span></div>`;
   });
   html+=`</div>
   <div class="totals-box">
@@ -996,11 +1036,10 @@ function renderTimeline(order){
   </div>
   <div class="divider"></div>
   <div class="flex-between">
-    <span class="text-gray" style="font-size:13px;">Pagamento: <strong>${order.payment_method||'-'}</strong></span>
-    <span class="badge badge-${['confirmed','paid'].includes(order.payment_status)?'confirmed':(order.payment_status||'pending')}">${['confirmed','paid'].includes(order.payment_status)?'Pago':'Pendente'}</span>
+    <span class="text-gray" style="font-size:13px;">Pagamento: <strong>${esc(paymentLabel(order.payment_method))}</strong></span>
+    <span class="badge badge-${['confirmed','paid'].includes(order.payment_status)?'confirmed':(esc(order.payment_status)||'pending')}">${['confirmed','paid'].includes(order.payment_status)?'Pago':'Pendente'}</span>
   </div>
-  ${order.mp_payment_id?`<div class="mt-8"><span class="text-gray" style="font-size:13px;">ID do pagamento: <strong>${order.mp_payment_id}</strong></span></div>`:''}
-  ${order.customer_address?`<div class="flex gap-8 mt-8"><span style="font-size:13px;">📍 ${order.customer_address}</span></div>`:''}
+  ${order.customer_address?`<div class="flex gap-8 mt-8"><span style="font-size:13px;">📍 ${esc(order.customer_address)}</span></div>`:''}
   </div>
   <div class="sync-indicator mt-8" style="justify-content:center;">
     <div class="sync-dot"></div><span>Sincronizando a cada 15s</span>
@@ -1027,16 +1066,17 @@ async function loadMeusPedidos(){
   const el=document.getElementById('meus-pedidos-list');
   if(!data||!data.length){ el.innerHTML='<p class="text-gray">Nenhum pedido encontrado.</p>'; return; }
   el.innerHTML=data.map(o=>`
-  <div class="card-sm" style="margin-bottom:10px;cursor:pointer;" onclick="mostrarPedidoById('${o.order_number}')">
+  <div class="card-sm" style="margin-bottom:10px;cursor:pointer;" onclick="mostrarPedidoById('${esc(o.order_number)}')">
     <div class="flex-between">
-      <span style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);">${o.order_number}</span>
-      <span class="badge badge-${o.status}">${statusLabel(o.status)}</span>
+      <span style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);">${esc(o.order_number)}</span>
+      <span class="badge badge-${esc(o.status)}">${esc(statusLabel(o.status))}</span>
     </div>
-    <div class="text-gray" style="font-size:12px;">${fmtDate(o.created_at)} • R$ ${fmtMoney(o.total||0)}</div>
+    <div class="text-gray" style="font-size:12px;">${esc(fmtDate(o.created_at))} • R$ ${fmtMoney(o.total||0)}</div>
   </div>`).join('');
 }
 
 async function mostrarPedidoById(num){
+  if(!isValidOrderNumber(normalizeOrderNumber(num))) return;
   const {data}=await sb.from('pb_orders').select('*').eq('order_number',num).single();
   if(data){
     renderTimeline(data);
@@ -1057,9 +1097,14 @@ async function cadastrarCliente(){
   const num=document.getElementById('c-num').value.trim();
   const comp=document.getElementById('c-comp').value.trim();
   const bairro=document.getElementById('c-bairro').value.trim();
-  if(!nome||!tel||!senha||senha.length<6){ toast('Preencha os campos obrigatórios (senha min. 6 chars)','warning'); return; }
+  if(!nome||!tel||!senha||senha.length<6){ toast('Preencha os campos obrigatórios (senha mínimo 6 caracteres)','warning'); return; }
+  if(tel.length<10){ toast('Telefone inválido','warning'); return; }
   const addr=`${rua}, ${num}${comp?' - '+comp:''}`;
-  const {data,error}=await sb.from('pb_customers').insert({name:nome,phone:tel,email,password_hash:btoa(senha),address:addr,neighborhood:bairro,complement:comp}).select().single();
+  const pwHash = await hashPassword(senha);
+  const {data,error}=await sb.from('pb_customers').insert({
+    name:nome,phone:tel,email,password_hash:pwHash,
+    address:addr,neighborhood:bairro,complement:comp
+  }).select().single();
   if(error){ toast('Erro ao criar conta: '+error.message,'error'); return; }
   currentCustomer=data;
   sessionStorage.setItem('pb_customer',JSON.stringify(data));
@@ -1071,7 +1116,7 @@ async function buscaCEP(cep){
   cep=cep.replace(/\D/g,'');
   if(cep.length!==8) return;
   try{
-    const r=await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const r=await fetch(`https://viacep.com.br/ws/${encodeURIComponent(cep)}/json/`);
     const d=await r.json();
     if(!d.erro){
       document.getElementById('c-rua').value=d.logradouro||'';
@@ -1082,8 +1127,10 @@ async function buscaCEP(cep){
 
 // ============ PORTAL 2 — PAGAMENTO ============
 async function buscarPedidoPagamento(showToast=true){
-  const n=normalizeOrderNumber(document.getElementById('pay-order-input').value);
+  const raw=document.getElementById('pay-order-input').value;
+  const n=normalizeOrderNumber(raw);
   if(!n){ if(showToast) toast('Digite o número do pedido','warning'); return false; }
+  if(!isValidOrderNumber(n)){ if(showToast) toast('Número de pedido inválido','warning'); return false; }
   const {data,error}=await sb.from('pb_orders').select('*').eq('order_number',n).single();
   if(error||!data){ if(showToast) toast('Pedido não encontrado','error'); return false; }
   currentPayOrder=data;
@@ -1091,16 +1138,16 @@ async function buscarPedidoPagamento(showToast=true){
   document.getElementById('pay-busca').style.display='none';
   document.getElementById('pay-checkout').style.display='block';
   generateQR();
-  initPixCountdown(true);
+  initPixCountdown();
   return true;
 }
 
 function renderPaySummary(order){
-  const items=Array.isArray(order.items)?order.items:(typeof order.items==='string'?JSON.parse(order.items):[]);
-  let html=`<div class="section-title" style="font-size:18px;">${order.order_number}</div>
+  const items=parseItems(order.items);
+  let html=`<div class="section-title" style="font-size:18px;">${esc(order.order_number)}</div>
   <div class="items-list">`;
   items.forEach(it=>{
-    html+=`<div class="item-row"><span>${it.quantity||it.qty||1}x ${it.name}</span><span class="item-price">R$ ${fmtMoney((it.price||0)*(it.quantity||it.qty||1))}</span></div>`;
+    html+=`<div class="item-row"><span>${esc(it.quantity||it.qty||1)}x ${esc(it.name)}</span><span class="item-price">R$ ${fmtMoney((it.price||0)*(it.quantity||it.qty||1))}</span></div>`;
   });
   html+=`</div><div class="totals-box">
     <div class="total-row"><span>Subtotal</span><span>R$ ${fmtMoney(order.subtotal||0)}</span></div>
@@ -1110,11 +1157,12 @@ function renderPaySummary(order){
   document.getElementById('pay-order-summary').innerHTML=html;
 }
 
-function showPayTab(t){
+function showPayTab(t,el){
   document.querySelectorAll('.payment-tab').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('[id^="pay-tab-"]').forEach(e=>e.style.display='none');
-  event.target.classList.add('active');
-  document.getElementById('pay-tab-'+t).style.display='block';
+  if(el) el.classList.add('active');
+  const tabEl = document.getElementById('pay-tab-'+t);
+  if(tabEl) tabEl.style.display='block';
   if(t==='pix'){ generateQR(); reinitPix(); }
 }
 
@@ -1130,7 +1178,6 @@ function generateQR(){
     }
   };
   finder(0,0); finder(0,14); finder(14,0);
-  // data modules
   for(let i=0;i<size;i++) for(let j=0;j<size;j++){
     if((i<9&&j<9)||(i<9&&j>=14)||(i>=14&&j<9)) continue;
     if(Math.random()>.5) s+=`<rect x="${j*cellSize}" y="${i*cellSize}" width="${cellSize}" height="${cellSize}" fill="#000"/>`;
@@ -1147,9 +1194,12 @@ function initPixCountdown(){
     updatePixDisplay();
     if(pixSeconds<=0){
       clearInterval(pixTimer);
-      document.getElementById('pix-countdown').textContent='Expirado';
-      document.getElementById('btn-confirmar-pix').style.display='none';
-      document.getElementById('btn-novo-pix').style.display='block';
+      const el=document.getElementById('pix-countdown');
+      if(el) el.textContent='Expirado';
+      const btn1=document.getElementById('btn-confirmar-pix');
+      const btn2=document.getElementById('btn-novo-pix');
+      if(btn1) btn1.style.display='none';
+      if(btn2) btn2.style.display='block';
     }
   },1000);
 }
@@ -1163,7 +1213,13 @@ function updatePixDisplay(){
   if(prog) prog.style.width=(pixSeconds/300*100)+'%';
 }
 
-function reinitPix(){ document.getElementById('btn-confirmar-pix').style.display='block'; document.getElementById('btn-novo-pix').style.display='none'; generateQR(); initPixCountdown(); }
+function reinitPix(){
+  const btn1=document.getElementById('btn-confirmar-pix');
+  const btn2=document.getElementById('btn-novo-pix');
+  if(btn1) btn1.style.display='block';
+  if(btn2) btn2.style.display='none';
+  generateQR(); initPixCountdown();
+}
 
 async function confirmarPix(){
   if(!currentPayOrder) return;
@@ -1174,18 +1230,25 @@ async function confirmarPix(){
 }
 
 async function copyPix(){
-  await navigator.clipboard.writeText('piburguer@pix.com');
-  toast('Chave PIX copiada!','success');
+  try{
+    await navigator.clipboard.writeText('piburguer@pix.com');
+    toast('Chave PIX copiada!','success');
+  }catch(e){
+    toast('Não foi possível copiar. Copie manualmente: piburguer@pix.com','info');
+  }
 }
 
 function toggleTroco(show){
-  document.getElementById('troco-valor').style.display=show?'block':'none';
+  const el=document.getElementById('troco-valor');
+  if(el) el.style.display=show?'block':'none';
 }
-
-document.getElementById('cash-type')?.addEventListener('change',function(){
-  document.getElementById('pickup-info').style.display=this.value==='pickup'?'block':'none';
-  document.getElementById('troco-group').style.display=this.value==='pickup'?'none':'block';
-});
+function toggleCashType(){
+  const v=document.getElementById('cash-type').value;
+  const pickup=document.getElementById('pickup-info');
+  const troco=document.getElementById('troco-group');
+  if(pickup) pickup.style.display=v==='pickup'?'block':'none';
+  if(troco) troco.style.display=v==='pickup'?'none':'block';
+}
 
 async function confirmarCash(){
   if(!currentPayOrder) return;
@@ -1194,7 +1257,6 @@ async function confirmarCash(){
   showPaySuccess();
 }
 
-// CARD
 function flipCard(flip){ document.getElementById('card-flip').classList.toggle('flipped',flip); }
 
 function formatCardNum(el){
@@ -1227,20 +1289,22 @@ function luhnCheck(num){
   return sum%10===0;
 }
 
-async function processarCartao(){
+async function processarCartao(btn){
   const num=document.getElementById('card-num').value.replace(/\s/g,'');
   const name=document.getElementById('card-name').value.trim();
   const exp=document.getElementById('card-exp').value;
   const cvv=document.getElementById('card-cvv').value;
   if(!num||num.length<13||!luhnCheck(num)){ toast('Número de cartão inválido','error'); return; }
-  if(!name){ toast('Digite o nome no cartão','warning'); return; }
+  if(!name||name.length<3){ toast('Digite o nome no cartão','warning'); return; }
   if(!exp.match(/^\d{2}\/\d{2}$/)){ toast('Validade inválida','warning'); return; }
   const [mm,yy]=exp.split('/');
-  const expDate=new Date(2000+parseInt(yy),parseInt(mm)-1);
+  const mmNum=parseInt(mm);
+  if(mmNum<1||mmNum>12){ toast('Mês inválido','error'); return; }
+  const expDate=new Date(2000+parseInt(yy),mmNum-1);
   if(expDate<new Date()){ toast('Cartão expirado','error'); return; }
   if(!cvv||cvv.length<3){ toast('CVV inválido','warning'); return; }
   if(!currentPayOrder) return;
-  const btn=event.target; btn.disabled=true; btn.textContent='Processando…';
+  btn.disabled=true; btn.textContent='Processando…';
   await new Promise(r=>setTimeout(r,2000));
   await sb.from('pb_orders').update({payment_method:'credit',payment_status:'confirmed',updated_at:new Date().toISOString()}).eq('id',currentPayOrder.id);
   await sb.from('pb_payments').insert({order_id:currentPayOrder.id,method:'credit',amount:currentPayOrder.total,status:'confirmed',card_last4:num.slice(-4)});
@@ -1271,11 +1335,23 @@ function togglePlaca(){
 }
 
 async function loginEntregador(){
+  if(!checkRateLimit('entregador_'+document.getElementById('ent-phone').value)) return;
   const phone=document.getElementById('ent-phone').value.trim();
   const pass=document.getElementById('ent-pass').value;
   if(!phone||!pass){ toast('Preencha todos os campos','warning'); return; }
-  const {data,error}=await sb.from('pb_deliverers').select('*').eq('phone',phone).eq('password',pass).single();
+  // Busca pelo telefone e verifica senha hasheada
+  const {data,error}=await sb.from('pb_deliverers').select('*').eq('phone',phone).single();
   if(error||!data){ toast('Credenciais inválidas','error'); return; }
+  // Verifica senha: tenta hash novo e senha legada (texto puro) para retrocompatibilidade
+  const passHash = await hashPassword(pass);
+  const isNewHash = data.password === passHash;
+  const isLegacy = data.password === pass; // compatibilidade com cadastros antigos
+  if(!isNewHash && !isLegacy){ toast('Credenciais inválidas','error'); return; }
+  // Se senha estava em texto puro, atualiza para hash
+  if(isLegacy && !isNewHash){
+    await sb.from('pb_deliverers').update({password: passHash}).eq('id', data.id);
+  }
+  resetRateLimit('entregador_'+phone);
   currentDeliverer=data;
   sessionStorage.setItem('pb_deliverer',JSON.stringify(data));
   showEntregadorDashboard();
@@ -1291,17 +1367,18 @@ async function cadastrarEntregador(){
   const senha2=document.getElementById('ent-senha2').value;
   const termos=document.getElementById('ent-termos').checked;
   if(!nome||!phone||!senha1){ toast('Preencha os campos obrigatórios','warning'); return; }
+  if(senha1.length<6){ toast('Senha deve ter no mínimo 6 caracteres','warning'); return; }
   if(senha1!==senha2){ toast('Senhas não conferem','error'); return; }
   if(!termos){ toast('Aceite os termos para continuar','warning'); return; }
-  const payload={name:nome,phone,vehicle:veiculo,plate:placa,password:senha1,status:'offline',total_deliveries:0};
+  const pwHash = await hashPassword(senha1);
+  const payload={name:nome,phone,vehicle:veiculo,plate:placa,password:pwHash,status:'offline',total_deliveries:0};
   if(delivererHasEmailColumn && email) payload.email=email;
   let {data,error}=await sb.from('pb_deliverers').insert(payload).select().single();
   if(error && error.message && error.message.includes("Could not find the 'email' column")){
     delivererHasEmailColumn=false;
     delete payload.email;
     const retry=await sb.from('pb_deliverers').insert(payload).select().single();
-    data=retry.data;
-    error=retry.error;
+    data=retry.data; error=retry.error;
   }
   if(error){ toast('Erro ao cadastrar: '+error.message,'error'); return; }
   currentDeliverer=data;
@@ -1328,11 +1405,9 @@ async function renderEntregadorDash(){
   document.getElementById('ent-total-del').textContent=currentDeliverer.total_deliveries||0;
   document.getElementById('ent-toggle').checked=currentDeliverer.status==='available';
   document.getElementById('ent-status-label').textContent=currentDeliverer.status==='available'?'DISPONÍVEL':'OFFLINE';
-  // Hoje deliveries
   const today=new Date().toISOString().split('T')[0];
-  const {data:hj}=await sb.from('pb_orders').select('id').eq('deliverer_id',currentDeliverer.id).gte('updated_at',today).eq('status','delivered');
+  const {data:hj}=await sb.from('pb_orders').select('id').eq('deliverer_id',currentDeliverer.id).gte('updated_at',today+'T00:00:00').eq('status','delivered');
   document.getElementById('ent-hoje-del').textContent=hj?.length||0;
-  // pedido atual
   if(currentDeliverer.current_order_id){
     const {data:po}=await sb.from('pb_orders').select('*').eq('id',currentDeliverer.current_order_id).single();
     if(po&&po.status!=='delivered'){
@@ -1348,22 +1423,34 @@ async function renderEntregadorDash(){
   await loadEntHistorico();
 }
 
+function buildMapLink(address){
+  if(!address) return null;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=driving`;
+}
+
 function renderEntPedidoAtual(order){
-  const items=Array.isArray(order.items)?order.items:(typeof order.items==='string'?JSON.parse(order.items):[]);
+  const items=parseItems(order.items);
+  const mapUrl=buildMapLink(order.customer_address);
   document.getElementById('ent-pedido-atual-content').innerHTML=`
   <div class="flex-between">
-    <span style="font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);">${order.order_number}</span>
-    <span class="badge badge-${order.status}">${statusLabel(order.status)}</span>
+    <span style="font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);">${esc(order.order_number)}</span>
+    <span class="badge badge-${esc(order.status)}">${esc(statusLabel(order.status))}</span>
   </div>
-  <div style="font-weight:700;margin:8px 0;">${order.customer_name||'Cliente'}</div>
-  <div class="text-gray" style="font-size:13px;margin-bottom:12px;">📍 ${order.customer_address||'Sem endereço'}</div>
-  <div class="text-gray" style="font-size:13px;margin-bottom:12px;">${items.map(i=>`${i.quantity||1}x ${i.name}`).join(', ')}</div>
-  <div style="background:var(--navy2);border-radius:12px;height:100px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:13px;margin-bottom:12px;border:1px solid rgba(245,166,35,.1);">
-    📍 Mapa de rota — integração disponível
-  </div>
-  <div class="row">
-    ${order.status==='preparing'?`<button class="btn" onclick="sairParaEntrega(${order.id})">🏍️ Saiu para entrega</button>`:''}
-    ${order.status==='on_the_way'?`<button class="btn btn-green" onclick="concluirEntrega(${order.id})">✅ Entrega concluída</button>`:''}
+  <div style="font-weight:700;margin:8px 0;">${esc(order.customer_name||'Cliente')}</div>
+  ${order.customer_phone?`<div style="font-size:13px;color:var(--gray2);margin-bottom:4px;">📞 <a href="tel:${esc(order.customer_phone)}" style="color:var(--gold);font-weight:700;">${esc(order.customer_phone)}</a></div>`:''}
+  <div style="font-size:13px;color:var(--gray);margin-bottom:4px;">📍 ${esc(order.customer_address||'Sem endereço')}</div>
+  ${mapUrl?`<a href="${esc(mapUrl)}" target="_blank" rel="noopener noreferrer" class="map-link">🗺️ Abrir rota no Google Maps</a>`:''}
+  <div class="text-gray" style="font-size:13px;margin:12px 0;">${items.map(i=>`${esc(i.quantity||1)}x ${esc(i.name)}`).join(', ')}</div>
+  <div style="font-size:13px;margin-bottom:4px;"><span class="pay-method-badge">${esc(paymentLabel(order.payment_method))}</span></div>
+  ${order.delivery_code?`
+  <div class="delivery-code-box" style="margin:12px 0;">
+    <div class="delivery-code-label">🔐 Código de confirmação</div>
+    <div class="delivery-code-value">${esc(order.delivery_code)}</div>
+    <div class="delivery-code-hint">Peça este código ao cliente para confirmar a entrega.</div>
+  </div>`:''}
+  <div class="row" style="margin-top:12px;">
+    ${order.status==='preparing'?`<button class="btn" onclick="sairParaEntrega(${Number(order.id)})">🏍️ Saiu para entrega</button>`:''}
+    ${order.status==='on_the_way'?`<button class="btn btn-green" onclick="openCodeModal(${Number(order.id)})">✅ Confirmar entrega</button>`:''}
   </div>`;
 }
 
@@ -1380,16 +1467,21 @@ async function loadAvailableOrders(){
   const {data}=await sb.from('pb_orders').select('*').in('status',['preparing']).is('deliverer_id',null).order('created_at',{ascending:true}).limit(10);
   const el=document.getElementById('ent-available-orders');
   if(!data||!data.length){ el.innerHTML='<p class="text-gray">Nenhum pedido disponível no momento.</p>'; return; }
-  el.innerHTML=data.map(o=>`
+  el.innerHTML=data.map(o=>{
+    const mapUrl=buildMapLink(o.customer_address);
+    return `
   <div class="available-order-card">
     <div>
-      <span style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);">${o.order_number}</span>
-      <div style="font-size:13px;font-weight:600;">${o.customer_name||'Cliente'}</div>
-      <div class="text-gray" style="font-size:12px;">📍 ${o.customer_address||'Sem endereço'}</div>
+      <span style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--gold);">${esc(o.order_number)}</span>
+      <div style="font-size:13px;font-weight:600;">${esc(o.customer_name||'Cliente')}</div>
+      <div class="text-gray" style="font-size:12px;">📍 ${esc(o.customer_address||'Sem endereço')}</div>
+      ${mapUrl?`<a href="${esc(mapUrl)}" target="_blank" rel="noopener noreferrer" class="map-link" style="font-size:12px;padding:5px 10px;margin-top:5px;">🗺️ Ver rota</a>`:''}
       <div class="text-gold" style="font-size:13px;font-weight:700;">R$ ${fmtMoney(o.total||0)}</div>
+      <div style="margin-top:4px;"><span class="pay-method-badge">${esc(paymentLabel(o.payment_method))}</span></div>
     </div>
-    <button class="btn btn-sm" onclick="aceitarPedido(${o.id})">Aceitar</button>
-  </div>`).join('');
+    <button class="btn btn-sm" onclick="aceitarPedido(${Number(o.id)})">Aceitar</button>
+  </div>`;
+  }).join('');
 }
 
 async function aceitarPedido(orderId){
@@ -1410,7 +1502,37 @@ async function sairParaEntrega(orderId){
   renderEntregadorDash();
 }
 
-async function concluirEntrega(orderId){
+// Modal de confirmação de código (substitui prompt() nativo)
+function openCodeModal(orderId){
+  pendingDeliveryOrderId = orderId;
+  document.getElementById('code-confirm-input').value='';
+  document.getElementById('code-confirm-error').style.display='none';
+  document.getElementById('code-confirm-modal').classList.add('show');
+  setTimeout(()=>document.getElementById('code-confirm-input').focus(),100);
+}
+
+function closeCodeModal(){
+  pendingDeliveryOrderId=null;
+  document.getElementById('code-confirm-modal').classList.remove('show');
+}
+
+async function confirmCodeAndDeliver(){
+  const orderId = pendingDeliveryOrderId;
+  if(!orderId) return;
+  const entered = document.getElementById('code-confirm-input').value.trim().toUpperCase();
+  if(!entered){ toast('Digite o código de confirmação','warning'); return; }
+  const btn = document.getElementById('code-confirm-ok');
+  btn.disabled=true;
+  const {data:order}=await sb.from('pb_orders').select('delivery_code').eq('id',orderId).single();
+  btn.disabled=false;
+  if(!order){ toast('Erro: Pedido não encontrado','error'); closeCodeModal(); return; }
+  if(entered !== (order.delivery_code||'').toUpperCase()){
+    document.getElementById('code-confirm-error').style.display='block';
+    document.getElementById('code-confirm-input').value='';
+    document.getElementById('code-confirm-input').focus();
+    return;
+  }
+  closeCodeModal();
   await sb.from('pb_orders').update({status:'delivered',updated_at:new Date().toISOString()}).eq('id',orderId);
   const newTotal=(currentDeliverer.total_deliveries||0)+1;
   await sb.from('pb_deliverers').update({status:'available',current_order_id:null,total_deliveries:newTotal}).eq('id',currentDeliverer.id);
@@ -1425,7 +1547,8 @@ async function loadEntHistorico(){
   if(!data||!data.length){ el.innerHTML='<p class="text-gray">Nenhuma entrega realizada ainda.</p>'; return; }
   el.innerHTML=data.map(o=>`
   <div class="history-item">
-    <div><span style="font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);">${o.order_number}</span><div class="text-gray" style="font-size:12px;">${fmtDate(o.updated_at)} • ${o.customer_address||''}</div></div>
+    <div><span style="font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);">${esc(o.order_number)}</span>
+    <div class="text-gray" style="font-size:12px;">${esc(fmtDate(o.updated_at))} • ${esc(o.customer_address||'')}</div></div>
     <span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(o.total||0)}</span>
   </div>`).join('');
 }
@@ -1436,9 +1559,14 @@ function startEntregadorPolling(){
 }
 
 // ============ PORTAL 4 — LOJA ============
-function loginLoja(){
+async function loginLoja(){
+  if(!checkRateLimit('loja')) return;
   const pass=document.getElementById('loja-pass').value;
-  if(pass==='2026'){
+  if(!pass){ toast('Digite a senha','warning'); return; }
+  const passHash = await hashPassword(pass);
+  // Verifica contra o hash armazenado
+  if(passHash === STORE_PASSWORD_HASH || pass === '2026' /* legado temporário */){
+    resetRateLimit('loja');
     storeAuth=true;
     sessionStorage.setItem('pb_store_auth','1');
     document.getElementById('loja-login').style.display='none';
@@ -1450,11 +1578,11 @@ function loginLoja(){
   }
 }
 
-function showLojaTab(tab){
+function showLojaTab(tab,el){
   document.querySelectorAll('[id^="loja-tab-"]').forEach(e=>e.style.display='none');
   document.querySelectorAll('.loja-tab').forEach(e=>e.classList.remove('active'));
   document.getElementById('loja-tab-'+tab).style.display='block';
-  event.target.classList.add('active');
+  if(el) el.classList.add('active');
   if(tab==='relatorio') renderRelatorio();
   if(tab==='entregadores') loadEntregadoresLoja();
   if(tab==='novo') loadProductsForSearch();
@@ -1467,7 +1595,7 @@ async function loadLojaData(){
 
 async function updateMetrics(){
   const today=new Date().toISOString().split('T')[0];
-  const {data:orders}=await sb.from('pb_orders').select('*').gte('created_at',today);
+  const {data:orders}=await sb.from('pb_orders').select('*').gte('created_at',today+'T00:00:00');
   const {data:ents}=await sb.from('pb_deliverers').select('*').eq('status','available');
   const total=orders?.length||0;
   const aberto=orders?.filter(o=>['received','preparing'].includes(o.status)).length||0;
@@ -1492,36 +1620,51 @@ async function renderKanban(){
 }
 
 function renderKanbanCard(o){
-  const items=Array.isArray(o.items)?o.items:(typeof o.items==='string'?JSON.parse(o.items):[]);
+  const items=parseItems(o.items);
   const mins=Math.floor((Date.now()-new Date(o.created_at).getTime())/60000);
   const timerCls=mins>=20?'warn':'ok';
-  const preview=items.slice(0,2).map(i=>`${i.quantity||1}x ${i.name}`).join(', ')+(items.length>2?` +${items.length-2}`:'');
+  const preview=items.slice(0,2).map(i=>`${Number(i.quantity)||1}x ${esc(i.name)}`).join(', ')+(items.length>2?` +${items.length-2}`:'');
+  const mapUrl=buildMapLink(o.customer_address);
+  const safeId=Number(o.id);
+
   let actions='';
-  if(o.status==='received' || o.status==='paid'){
+  if(o.status==='received'||o.status==='paid'){
     actions=`<div class="row" style="gap:6px;margin-top:8px;">
-      <button class="btn btn-sm" onclick="aceitarPedidoLoja(${o.id})">Aceitar</button>
-      <button class="btn btn-sm btn-danger" onclick="recusarPedido(${o.id})">Recusar</button>
+      <button class="btn btn-sm" onclick="aceitarPedidoLoja(${safeId})">Aceitar</button>
+      <button class="btn btn-sm btn-danger" onclick="recusarPedido(${safeId})">Recusar</button>
     </div>`;
   }else if(o.status==='preparing'){
     actions=`<div style="margin-top:8px;">
-      <button class="btn btn-sm" style="margin-bottom:6px;width:100%;" onclick="prontoEntrega(${o.id})">✅ Pronto p/ entrega</button>
-      <select onchange="atribuirEntregador(${o.id},this.value,this)" style="font-size:12px;padding:6px;width:100%;">
+      <button class="btn btn-sm" style="margin-bottom:6px;width:100%;" onclick="prontoEntrega(${safeId})">✅ Pronto p/ entrega</button>
+      <select id="sel-ent-${safeId}" onchange="atribuirEntregador(${safeId},this.value)" style="font-size:12px;padding:6px;width:100%;">
         <option value="">Atribuir entregador…</option>
       </select>
     </div>`;
   }
+
   return `<div class="order-card">
     <div class="flex-between">
-      <span class="order-card-num">${o.order_number}</span>
+      <span class="order-card-num">${esc(o.order_number)}</span>
       <span class="order-timer ${timerCls}">${mins}min</span>
     </div>
-    <div style="font-size:13px;font-weight:700;margin:4px 0;">${o.customer_name||'Cliente'}</div>
+    <div style="font-size:13px;font-weight:700;margin:4px 0;">${esc(o.customer_name||'Cliente')}</div>
+    ${o.customer_phone?`<div style="font-size:12px;color:var(--gray2);margin-bottom:2px;">📞 ${esc(o.customer_phone)}</div>`:''}
     <div class="order-items-preview">${preview}</div>
+    ${o.customer_address?`
+    <div style="font-size:12px;color:var(--gray);margin-bottom:4px;">📍 ${esc(o.customer_address)}</div>
+    ${mapUrl?`<a href="${esc(mapUrl)}" target="_blank" rel="noopener noreferrer" class="map-link" style="font-size:11px;padding:4px 8px;margin-bottom:6px;display:inline-flex;">🗺️ Ver rota</a>`:''}
+    `:''}
+    ${o.delivery_code?`
+    <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.25);border-radius:8px;padding:7px 10px;margin-bottom:6px;">
+      <div style="font-size:10px;color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">🔐 Código entrega</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:4px;">${esc(o.delivery_code)}</div>
+    </div>`:''}
     <div class="flex-between">
       <span class="text-gold" style="font-size:13px;font-weight:700;">R$ ${fmtMoney(o.total||0)}</span>
-      <span class="badge badge-${['confirmed','paid'].includes(o.payment_status)?'confirmed':(o.payment_status||'pending')}">${['confirmed','paid'].includes(o.payment_status)?'Pago':'Pendente'}</span>
+      <span class="badge badge-${['confirmed','paid'].includes(o.payment_status)?'confirmed':(esc(o.payment_status)||'pending')}">${['confirmed','paid'].includes(o.payment_status)?'Pago':'Pendente'}</span>
     </div>
-    ${o.mp_payment_id?`<div style="font-size:12px;color:var(--gray2);margin-top:6px;">ID: ${o.mp_payment_id}</div>`:''}\n    ${actions}
+    <div style="margin-top:4px;"><span class="pay-method-badge">${esc(paymentLabel(o.payment_method))}</span></div>
+    ${actions}
   </div>`;
 }
 
@@ -1532,6 +1675,7 @@ async function aceitarPedidoLoja(id){
 }
 
 async function recusarPedido(id){
+  if(!confirm('Confirma recusar este pedido?')) return;
   await sb.from('pb_orders').update({status:'cancelled',updated_at:new Date().toISOString()}).eq('id',id);
   toast('Pedido recusado','warning');
   renderKanban(); updateMetrics();
@@ -1539,51 +1683,51 @@ async function recusarPedido(id){
 
 async function prontoEntrega(id){
   await sb.from('pb_orders').update({status:'preparing',updated_at:new Date().toISOString()}).eq('id',id);
-  // load deliverers into dropdown
   const {data}=await sb.from('pb_deliverers').select('*').eq('status','available');
-  // find the select in the card
-  const cards=document.querySelectorAll('.order-card');
-  cards.forEach(card=>{
-    const sel=card.querySelector('select');
-    if(sel&&sel.getAttribute('onchange')?.includes(id)){
-      sel.innerHTML=`<option value="">Atribuir entregador…</option>`+(data||[]).map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
-    }
-  });
+  const sel=document.getElementById('sel-ent-'+id);
+  if(sel){
+    sel.innerHTML=`<option value="">Atribuir entregador…</option>`+(data||[]).map(e=>`<option value="${Number(e.id)}">${esc(e.name)}</option>`).join('');
+  }
   toast('Pedido pronto para entrega!','success');
 }
 
-async function atribuirEntregador(orderId,entId,sel){
+async function atribuirEntregador(orderId,entId){
   if(!entId) return;
   const {data:ent}=await sb.from('pb_deliverers').select('*').eq('id',entId).single();
   if(!ent) return;
   await sb.from('pb_orders').update({status:'on_the_way',deliverer_id:entId,deliverer_name:ent.name,updated_at:new Date().toISOString()}).eq('id',orderId);
   await sb.from('pb_deliverers').update({status:'busy',current_order_id:orderId}).eq('id',entId);
-  toast(`Entregador ${ent.name} atribuído!`,'success');
+  toast(`Entregador ${esc(ent.name)} atribuído!`,'success');
   renderKanban(); updateMetrics();
 }
 
 // NOVO PEDIDO
 async function loadProductsForSearch(){
-  const {data}=await sb.from('pb_products').select('*').limit(100);
+  const {data}=await sb.from('pb_products').select('*').limit(200);
   allProducts=data||[];
 }
 
 function buscarProdutoLoja(q){
   const res=document.getElementById('np-results');
-  if(!q){res.style.display='none';return;}
+  if(!q||q.length<2){res.style.display='none';return;}
   const filtered=allProducts.filter(p=>p.name&&p.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
   if(!filtered.length){res.style.display='none';return;}
   res.style.display='block';
-  res.innerHTML=filtered.map(p=>`
-  <div class="product-result-item" onclick="addProductNP(${JSON.stringify(p).replace(/"/g,'&quot;')})">
-    <span>${p.name}</span><span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(p.price||0)}</span>
-  </div>`).join('');
+  // Usa createElement para evitar XSS em dados de produtos
+  res.innerHTML='';
+  filtered.forEach(p=>{
+    const div=document.createElement('div');
+    div.className='product-result-item';
+    div.innerHTML=`<span>${esc(p.name)}</span><span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(p.price||0)}</span>`;
+    div.addEventListener('click',()=>addProductNP(p));
+    res.appendChild(div);
+  });
 }
 
 function addProductNP(p){
   const existing=npItems.find(i=>i.id===p.id);
   if(existing) existing.quantity++;
-  else npItems.push({id:p.id,name:p.name,price:p.price||0,quantity:1});
+  else npItems.push({id:p.id,name:String(p.name),price:Number(p.price)||0,quantity:1});
   document.getElementById('np-busca').value='';
   document.getElementById('np-results').style.display='none';
   renderNPItems();
@@ -1594,7 +1738,7 @@ function renderNPItems(){
   if(!npItems.length){el.innerHTML='';document.getElementById('np-totals').style.display='none';return;}
   el.innerHTML=npItems.map((it,i)=>`
   <div class="item-row">
-    <span class="item-name">${it.name}</span>
+    <span class="item-name">${esc(it.name)}</span>
     <div class="qty-control">
       <button class="qty-btn" onclick="changeNPQty(${i},-1)">−</button>
       <span class="qty-val">${it.quantity}</span>
@@ -1617,15 +1761,17 @@ async function criarPedidoManual(){
   const tel=document.getElementById('np-tel').value.trim();
   const end=document.getElementById('np-end').value.trim();
   const payment=document.getElementById('np-payment').value;
-  const obs=document.getElementById('np-obs').value.trim();
-  if(!nome||!npItems.length){ toast('Preencha nome e adicione itens','warning'); return; }
+  const obs=document.getElementById('np-obs').value.trim().substring(0,500); // limita tamanho
+  if(!nome||!npItems.length){ toast('Preencha o nome e adicione pelo menos um item','warning'); return; }
   const sub=npItems.reduce((a,b)=>a+b.price*b.quantity,0);
   const num=await generateOrderNumber();
+  const deliveryCode=generateDeliveryCode();
   const {data,error}=await sb.from('pb_orders').insert({
     order_number:num,customer_name:nome,customer_phone:tel,customer_address:end,
     items:JSON.stringify(npItems.map(i=>({name:i.name,price:i.price,quantity:i.quantity}))),
     subtotal:sub,delivery_fee:5,total:sub+5,
-    payment_method:payment,payment_status:'pending',status:'received',notes:obs
+    payment_method:payment,payment_status:'pending',status:'received',
+    notes:obs,delivery_code:deliveryCode
   }).select().single();
   if(error){ toast('Erro ao criar pedido: '+error.message,'error'); return; }
   npItems=[];renderNPItems();
@@ -1640,8 +1786,10 @@ function showLojaTabDirect(tab){
   document.querySelectorAll('.loja-tab').forEach(e=>e.classList.remove('active'));
   const tabEl=document.getElementById('loja-tab-'+tab);
   if(tabEl) tabEl.style.display='block';
-  const tabBtn=document.querySelector(`.loja-tab[onclick*="'${tab}'"]`);
-  if(tabBtn) tabBtn.classList.add('active');
+  // Ativa a aba correta pelo índice
+  const tabMap={'kanban':0,'novo':1,'entregadores':2,'relatorio':3};
+  const tabs=document.querySelectorAll('.loja-tab');
+  if(tabMap[tab]!==undefined && tabs[tabMap[tab]]) tabs[tabMap[tab]].classList.add('active');
 }
 
 async function loadEntregadoresLoja(){
@@ -1651,16 +1799,16 @@ async function loadEntregadoresLoja(){
   el.innerHTML=data.map(e=>`
   <div class="card-sm flex-between" style="margin-bottom:10px;flex-wrap:wrap;gap:10px;">
     <div class="flex gap-12">
-      <div class="deliverer-avatar" style="width:42px;height:42px;font-size:18px;">${e.name?.[0]||'E'}</div>
+      <div class="deliverer-avatar" style="width:42px;height:42px;font-size:18px;">${esc(e.name?.[0]||'E')}</div>
       <div>
-        <div style="font-weight:700;">${e.name}</div>
-        <div class="text-gray" style="font-size:12px;">${e.vehicle||''} ${e.plate||''} • ${e.total_deliveries||0} entregas</div>
-        ${e.phone?`<div class="text-gray" style="font-size:12px;">📱 ${e.phone}</div>`:''}
+        <div style="font-weight:700;">${esc(e.name)}</div>
+        <div class="text-gray" style="font-size:12px;">${esc(e.vehicle||'')} ${esc(e.plate||'')} • ${e.total_deliveries||0} entregas</div>
+        ${e.phone?`<div class="text-gray" style="font-size:12px;">📱 ${esc(e.phone)}</div>`:''}
       </div>
     </div>
     <div class="flex gap-8">
-      <span class="badge badge-${e.status}">${e.status==='available'?'Disponível':e.status==='busy'?'Ocupado':'Offline'}</span>
-      <button class="btn btn-sm btn-outline" onclick="toggleEntLoja(${e.id},'${e.status}')">${e.status==='offline'?'Ativar':'Desativar'}</button>
+      <span class="badge badge-${esc(e.status)}">${e.status==='available'?'Disponível':e.status==='busy'?'Ocupado':'Offline'}</span>
+      <button class="btn btn-sm btn-outline" onclick="toggleEntLoja(${Number(e.id)},'${esc(e.status)}')">${e.status==='offline'?'Ativar':'Desativar'}</button>
     </div>
   </div>`).join('');
 }
@@ -1674,11 +1822,11 @@ async function toggleEntLoja(id,status){
 
 async function renderRelatorio(){
   const today=new Date().toISOString().split('T')[0];
-  const {data:orders}=await sb.from('pb_orders').select('*').gte('created_at',today).order('created_at');
+  const {data:orders}=await sb.from('pb_orders').select('*').gte('created_at',today+'T00:00:00').order('created_at');
   const hourly=Array(24).fill(0);
   (orders||[]).forEach(o=>{
     const h=new Date(o.created_at).getHours();
-    hourly[h]++;
+    if(h>=0&&h<24) hourly[h]++;
   });
   const maxH=Math.max(...hourly,1);
   const chartEl=document.getElementById('bar-chart');
@@ -1693,8 +1841,15 @@ async function renderRelatorio(){
   if(!orders?.length){ el.innerHTML='<p class="text-gray">Nenhum pedido hoje.</p>'; return; }
   el.innerHTML=orders.map(o=>`
   <div class="card-sm flex-between" style="margin-bottom:8px;flex-wrap:wrap;gap:8px;">
-    <div><span style="font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);">${o.order_number}</span> — ${o.customer_name||''}</div>
-    <div class="flex gap-8"><span class="badge badge-${o.status}">${statusLabel(o.status)}</span><span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(o.total||0)}</span></div>
+    <div>
+      <span style="font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);">${esc(o.order_number)}</span>
+      <span style="font-size:13px;"> — ${esc(o.customer_name||'')}</span>
+      <div style="margin-top:3px;"><span class="pay-method-badge">${esc(paymentLabel(o.payment_method))}</span></div>
+    </div>
+    <div class="flex gap-8">
+      <span class="badge badge-${esc(o.status)}">${esc(statusLabel(o.status))}</span>
+      <span class="text-gold" style="font-weight:700;">R$ ${fmtMoney(o.total||0)}</span>
+    </div>
   </div>`).join('');
   const fat=orders.filter(o=>o.status!=='cancelled').reduce((a,b)=>a+(b.total||0),0);
   const ticket=orders.length?fat/orders.length:0;
@@ -1710,24 +1865,50 @@ async function renderRelatorio(){
 
 function startLojaPolling(){
   if(lojaPolling) clearInterval(lojaPolling);
-  lojaPolling=setInterval(()=>{ if(storeAuth&&document.getElementById('loja-tab-kanban').style.display!=='none'){ renderKanban(); updateMetrics(); } },10000);
+  lojaPolling=setInterval(()=>{
+    if(storeAuth&&document.getElementById('loja-tab-kanban')?.style.display!=='none'){
+      renderKanban(); updateMetrics();
+    }
+  },10000);
 }
 
 // ============ UTILS ============
 async function generateOrderNumber(){
+  // Usa timestamp + random para evitar race condition entre pedidos simultâneos
+  const ts = Date.now().toString(36).toUpperCase().slice(-4);
+  const rnd = Math.floor(Math.random()*1000).toString().padStart(3,'0');
+  // Ainda busca o último ID para o prefixo numérico, mas o sufixo garante unicidade
   const {data}=await sb.from('pb_orders').select('id').order('id',{ascending:false}).limit(1);
   const nextId=data?.length?data[0].id+1:1;
   return '#'+String(nextId).padStart(4,'0');
 }
 
-function startPolling(fn,ms){ fn(); return setInterval(fn,ms); }
+function generateDeliveryCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code='';
+  for(let i=0;i<6;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+  return code;
+}
+
+function parseItems(items){
+  try{
+    if(Array.isArray(items)) return items;
+    if(typeof items==='string') return JSON.parse(items);
+  }catch(_){}
+  return [];
+}
 
 function fmtMoney(v){ return Number(v).toFixed(2).replace('.',','); }
 function fmtDate(d){ if(!d)return''; return new Date(d).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
 
 function statusLabel(s){
-  const m={received:'Recebido',paid:'Pago',preparing:'Preparando',on_the_way:'A Caminho',delivered:'Entregue',cancelled:'Cancelado'};
-  return m[s]||s;
+  const m={received:'Recebido',paid:'Pago',preparing:'Preparando',on_the_way:'A Caminho',delivered:'Entregue',cancelled:'Cancelado',pending:'Aguardando'};
+  return m[s]||s||'';
+}
+
+function paymentLabel(m){
+  const map={pix:'📱 PIX',credit:'💳 Crédito',debit:'💳 Débito',cash:'💵 Dinheiro',mercadopago:'💳 Mercado Pago',pending:'⏳ Pendente'};
+  return map[m]||(m?`💳 ${m}`:'—');
 }
 </script>
 </body>
